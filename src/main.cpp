@@ -92,6 +92,9 @@ int main(int argc, char** argv) {
 	shader.CreateShaderFromFile("res/shaders/basic_V.shader", "res/shaders/basic_F.shader");
 
 	glViewport(0, 0, SCR_W, SCR_H);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	glm::mat4 projection = glm::ortho(0.0f, SCR_W * 1.0f, SCR_H * 1.0f, 0.0f, -1.0f, 1.0f);
 
@@ -107,6 +110,8 @@ int main(int argc, char** argv) {
 
 	Phil::Rect rect3 = { {250, 250}, {100, 100} };
 
+	Phil::Rect rect4 = { {450, 450}, {100, 100} };
+
 	bool wireMode = false;
 
 	//shader.use(); // important to do before setting uniforms
@@ -114,7 +119,7 @@ int main(int argc, char** argv) {
 	//shader.set_vec4("u_Color", glm::vec4(1, 1, 1, 1));
 
 	Phil::Texture texture1("res/gfx/pixel_phil.png");
-	Phil::Texture texture2("res/gfx/pixel_david.png");
+	Phil::Texture texture2("res/gfx/noob_shot.png");
 
 	//unsigned int texture[2] = {
 		//Phil::LoadTexture("res/gfx/pixel_david.png"), Phil::LoadTexture("res/gfx/pixel_phil.png")
@@ -147,15 +152,14 @@ int main(int argc, char** argv) {
 		rect1.pos = glm::vec2((0.5f + sin(gameTime) * 0.5f) * (SCR_W*1.0f-rect1.size.x), (0.5f + cos(gameTime) * 0.5f) * (SCR_H * 1.0f - rect1.size.y));
 		//rect1.size = glm::vec2((0.5f + sin(gameTime*0.9177f) * 0.5f) * SCR_W * 1.0f, (0.5f + cos(gameTime*1.17f) * 0.5f) * SCR_H * 1.0f);
 
-		renderer.SetDrawColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-
-		renderer.AddRect(&texture1, rect1, sin(gameTime*11) * 45);
-
-		renderer.SetDrawColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		renderer.AddRect(&texture2, rect1, sin(gameTime*11) * 45);
 
 		renderer.AddRect(&texture1, rect2);
 
-		renderer.AddRect(&texture2, rect3);
+		renderer.SetDrawColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+		renderer.AddRect(rect4, sin(gameTime * 9) * 45);
+
+		renderer.AddRect(&texture1, rect3);
 
 		renderer.DrawBatch();
 

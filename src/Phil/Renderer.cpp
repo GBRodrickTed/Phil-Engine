@@ -5,7 +5,6 @@ namespace Phil {
 	{
 		memset(m_slottedTexs, -1, 32 * sizeof(int));
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_maxTexSlots);
-
 		for (int i = 0; i < 32; i++) {
 			m_samplerArray[i] = i;
 		}
@@ -384,7 +383,7 @@ namespace Phil {
 			this->DrawBatch();
 		}
 
-		int texIndex = 0;
+		int texIndex = -1;
 
 		glm::mat4 model(1.0f);
 
@@ -489,8 +488,6 @@ namespace Phil {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, m_slottedTexs[i]);
 		}
-
-		std::cout << m_texBufferEnd << std::endl;
 
 		glDrawElements(GL_TRIANGLES, 6 * m_quadCount, GL_UNSIGNED_INT, 0);
 
