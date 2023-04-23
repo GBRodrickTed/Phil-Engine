@@ -23,6 +23,7 @@
     <ClCompile Include="src\Phil\Opengl Objects\GLDebug.cpp" />
     <ClCompile Include="src\Phil\Opengl Objects\IndexBuffer.cpp" />
     <ClCompile Include="src\Phil\Opengl Objects\Shader.cpp" />
+    <ClCompile Include="src\Phil\Opengl Objects\Texture.cpp" />
     <ClCompile Include="src\Phil\Opengl Objects\VertexArray.cpp" />
     <ClCompile Include="src\Phil\Opengl Objects\VertexBuffer.cpp" />
     <ClCompile Include="src\Phil\Rect.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="src\Phil\Opengl Objects\GLDebug.h" />
     <ClInclude Include="src\Phil\Opengl Objects\IndexBuffer.h" />
     <ClInclude Include="src\Phil\Opengl Objects\Shader.h" />
+    <ClInclude Include="src\Phil\Opengl Objects\Texture.h" />
     <ClInclude Include="src\Phil\Opengl Objects\VertexArray.h" />
     <ClInclude Include="src\Phil\Opengl Objects\VertexBuffer.h" />
     <ClInclude Include="src\Phil\Rect.h" />

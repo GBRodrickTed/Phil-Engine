@@ -111,6 +111,9 @@ int main(int argc, char** argv) {
 	//shader.set_iv("u_Textures", 32, samplers);
 	//shader.set_vec4("u_Color", glm::vec4(1, 1, 1, 1));
 
+	Phil::Texture texture1("res/gfx/pixel_phil.png");
+	Phil::Texture texture2("res/gfx/pixel_david.png");
+
 	//unsigned int texture[2] = {
 		//Phil::LoadTexture("res/gfx/pixel_david.png"), Phil::LoadTexture("res/gfx/pixel_phil.png")
 	//};
@@ -136,9 +139,6 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
-		//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		//vertArray.Clear();
-		//glClear(GL_COLOR_BUFFER_BIT);
 		renderer.Clear();
 
 		
@@ -151,9 +151,7 @@ int main(int argc, char** argv) {
 
 		renderer.SetDrawColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
-		renderer.AddRect(rect2);
-
-		//vertArray.AddRect(texture[0], rect2);
+		renderer.AddRect(&texture2, rect2);
 
 		renderer.DrawBatch();
 

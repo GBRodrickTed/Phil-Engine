@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 namespace Phil {
-	Renderer::Renderer() :m_VBO(GL_ARRAY_BUFFER), m_maxQuads(1), m_quadCount(0), m_projection(glm::mat4(1.0f)), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
+	Renderer::Renderer() :m_VBO(GL_ARRAY_BUFFER), m_maxQuads(1000), m_quadCount(0), m_projection(glm::mat4(1.0f)), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
 	{
 		memset(m_slottedTexs, -1, 32 * sizeof(int));
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_maxTexSlots);
@@ -17,10 +17,11 @@ namespace Phil {
 
 		m_vertSize = m_posSize + m_colorSize + m_texCoordSize + m_texIDSize;
 
-		m_vertices = new float[m_vertSize * 4 * (m_maxQuads + 2)];
+		m_vertices = new float[m_vertSize * 4 * (m_maxQuads + 2)]; // + 2 just in case
 		m_indices = new unsigned int[6 * (m_maxQuads + 2)];
 
 		m_vertBufferEnd = 0;
+		m_texBufferEnd = 0;
 
 		int index_offset = 0;
 		size_t index_size = 6 * m_maxQuads;
@@ -43,8 +44,6 @@ namespace Phil {
 				std::cout << std::endl;
 			}
 		}*/
-
-		m_texIndex = -1; // -1 means no texture
 	}
 
 	Renderer::~Renderer() {
@@ -67,7 +66,119 @@ namespace Phil {
 	void Renderer::AddRect(const Phil::Rect& rect) {
 
 		if (m_quadCount == m_maxQuads) {
-			DrawBatch();
+			this->DrawBatch();
+		}
+
+		int texIndex = 0;
+
+		glm::vec4 point[4];
+
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+
+		for (int i = 0; i < 4; i++) {
+			point[i] = m_projection * point[i];
+		}
+
+		// Vertex 1
+		m_vertices[m_vertBufferEnd + 0] = point[0].x;
+		m_vertices[m_vertBufferEnd + 1] = point[0].y;
+		m_vertices[m_vertBufferEnd + 2] = point[0].z;
+
+		m_vertices[m_vertBufferEnd + 3] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 4] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 5] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 6] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 7] = 0.0f;
+		m_vertices[m_vertBufferEnd + 8] = 0.0f;
+		m_vertices[m_vertBufferEnd + 9] = float(texIndex);
+
+		// Vertex 2
+		m_vertices[m_vertBufferEnd + 10] = point[1].x;
+		m_vertices[m_vertBufferEnd + 11] = point[1].y;
+		m_vertices[m_vertBufferEnd + 12] = point[1].z;
+
+		m_vertices[m_vertBufferEnd + 13] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 14] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 15] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 16] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 17] = 1.0f;
+		m_vertices[m_vertBufferEnd + 18] = 0.0f;
+		m_vertices[m_vertBufferEnd + 19] = float(texIndex);
+
+		// Vertex 3
+		m_vertices[m_vertBufferEnd + 20] = point[2].x;
+		m_vertices[m_vertBufferEnd + 21] = point[2].y;
+		m_vertices[m_vertBufferEnd + 22] = point[2].z;
+
+		m_vertices[m_vertBufferEnd + 23] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 24] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 25] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 26] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 27] = 0.0f;
+		m_vertices[m_vertBufferEnd + 28] = 1.0f;
+		m_vertices[m_vertBufferEnd + 29] = float(texIndex);
+
+		// Vertex 4
+		m_vertices[m_vertBufferEnd + 30] = point[3].x;
+		m_vertices[m_vertBufferEnd + 31] = point[3].y;
+		m_vertices[m_vertBufferEnd + 32] = point[3].z;
+
+		m_vertices[m_vertBufferEnd + 33] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 34] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 35] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 36] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 37] = 1.0f;
+		m_vertices[m_vertBufferEnd + 38] = 1.0f;
+		m_vertices[m_vertBufferEnd + 39] = float(texIndex);
+
+		m_vertBufferEnd += m_vertSize * 4;
+		m_quadCount++;
+
+		/*for (int i = 0; i < m_vertBufferEnd; i++) {
+			std::cout << m_vertices[i] << ", ";
+			if (((i + 1) % m_vertSize) == 0) {
+				std::cout << std::endl;
+			}
+		}
+		std::cout << std::endl;*/
+	}
+
+	void Renderer::AddRect(Texture* texture, const Phil::Rect& rect) {
+
+		if (m_quadCount == m_maxQuads) {
+			this->DrawBatch();
+		}
+
+		int texIndex = 0;
+
+		bool repeated_texture = false;
+
+		for (int i = 0; i < m_maxTexSlots; i++)
+		{
+			if (m_slottedTexs[i] == texture->GetTextureID())
+			{
+				texIndex = i + 1;
+				repeated_texture = true;
+				break;
+			}
+		}
+
+		if (repeated_texture == false)
+		{
+			if (m_texBufferEnd == m_maxTexSlots)
+			{
+				this->DrawBatch();
+			}
+			m_slottedTexs[m_texBufferEnd] = texture->GetTextureID();
+			texIndex = m_texBufferEnd + 1;
+			m_texBufferEnd++;
 		}
 
 		glm::vec4 point[4];
@@ -93,7 +204,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 7] = 0.0f;
 		m_vertices[m_vertBufferEnd + 8] = 0.0f;
-		m_vertices[m_vertBufferEnd + 9] = 0.0f;
+		m_vertices[m_vertBufferEnd + 9] = float(texIndex);
 
 		// Vertex 2
 		m_vertices[m_vertBufferEnd + 10] = point[1].x;
@@ -107,7 +218,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 17] = 1.0f;
 		m_vertices[m_vertBufferEnd + 18] = 0.0f;
-		m_vertices[m_vertBufferEnd + 19] = 0.0f;
+		m_vertices[m_vertBufferEnd + 19] = float(texIndex);
 
 		// Vertex 3
 		m_vertices[m_vertBufferEnd + 20] = point[2].x;
@@ -121,7 +232,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 27] = 0.0f;
 		m_vertices[m_vertBufferEnd + 28] = 1.0f;
-		m_vertices[m_vertBufferEnd + 29] = 0.0f;
+		m_vertices[m_vertBufferEnd + 29] = float(texIndex);
 
 		// Vertex 4
 		m_vertices[m_vertBufferEnd + 30] = point[3].x;
@@ -135,7 +246,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 37] = 1.0f;
 		m_vertices[m_vertBufferEnd + 38] = 1.0f;
-		m_vertices[m_vertBufferEnd + 39] = 0.0f;
+		m_vertices[m_vertBufferEnd + 39] = float(texIndex);
 
 		m_vertBufferEnd += m_vertSize * 4;
 		m_quadCount++;
@@ -147,17 +258,15 @@ namespace Phil {
 			}
 		}
 		std::cout << std::endl;*/
-
-		//std::cout << m_vertices.size() << ", " << m_indices.size() << std::endl;
-		//m_VBO.BufferSubData(0, sizeof(&m_vertices[0]) * m_vertices.size(), &m_vertices[0]);
-		//m_EBO.BufferSubData(0, sizeof(&m_indices[0]) * m_indices.size(), &m_indices[0]);
 	}
 
 	void Renderer::AddRect(const Phil::Rect& rect, float angle) {
 
 		if (m_quadCount == m_maxQuads) {
-			DrawBatch();
+			this->DrawBatch();
 		}
+
+		int texIndex = 0;
 
 		glm::mat4 model(1.0f);
 
@@ -190,7 +299,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 7] = 0.0f;
 		m_vertices[m_vertBufferEnd + 8] = 0.0f;
-		m_vertices[m_vertBufferEnd + 9] = 0.0f;
+		m_vertices[m_vertBufferEnd + 9] = float(texIndex);
 
 		// Vertex 2
 		m_vertices[m_vertBufferEnd + 10] = point[1].x;
@@ -204,7 +313,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 17] = 1.0f;
 		m_vertices[m_vertBufferEnd + 18] = 0.0f;
-		m_vertices[m_vertBufferEnd + 19] = 0.0f;
+		m_vertices[m_vertBufferEnd + 19] = float(texIndex);
 
 		// Vertex 3
 		m_vertices[m_vertBufferEnd + 20] = point[2].x;
@@ -218,7 +327,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 27] = 0.0f;
 		m_vertices[m_vertBufferEnd + 28] = 1.0f;
-		m_vertices[m_vertBufferEnd + 29] = 0.0f;
+		m_vertices[m_vertBufferEnd + 29] = float(texIndex);
 
 		// Vertex 4
 		m_vertices[m_vertBufferEnd + 30] = point[3].x;
@@ -232,7 +341,7 @@ namespace Phil {
 
 		m_vertices[m_vertBufferEnd + 37] = 1.0f;
 		m_vertices[m_vertBufferEnd + 38] = 1.0f;
-		m_vertices[m_vertBufferEnd + 39] = 0.0f;
+		m_vertices[m_vertBufferEnd + 39] = float(texIndex);
 
 		m_vertBufferEnd += m_vertSize * 4;
 		m_quadCount++;
@@ -248,14 +357,32 @@ namespace Phil {
 
 	void Renderer::DrawBatch()
 	{
-		Bind();
+		this->Bind();
 		m_basicShader.use();
 		m_basicShader.set_iv("u_Textures", 32, m_samplerArray);
+
+		for (int i = 0; i < m_maxTexSlots; i++)
+		{
+			if (m_slottedTexs[i] < 0)
+			{
+				continue;
+			}
+
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, m_slottedTexs[i]);
+		}
+
 		glDrawElements(GL_TRIANGLES, 6 * m_quadCount, GL_UNSIGNED_INT, 0);
 
 		m_quadCount = 0;
 		m_vertBufferEnd = 0;
+		m_texBufferEnd = 0;
 		m_VAO.Unbind();
+
+		for (int i = 0; i < m_maxTexSlots; i++)
+		{
+			m_slottedTexs[i] = -1;
+		}
 	}
 
 	void Renderer::Clear()

@@ -12,6 +12,7 @@
 #include "Opengl Objects/VertexArray.h"
 #include "Opengl Objects/VertexBuffer.h"
 #include "Opengl Objects/IndexBuffer.h"
+#include "Opengl Objects/Texture.h"
 #include "Opengl Objects/GLDebug.h"
 
 #include "Opengl Objects/Shader.h"
@@ -29,6 +30,8 @@ namespace Phil {
 		void AddRect(const Phil::Rect& rect);
 
 		void AddRect(const Phil::Rect& rect, float angle);
+
+		void AddRect(Texture* texture, const Phil::Rect& rect);
 
 		void DrawBatch();
 
@@ -64,14 +67,14 @@ namespace Phil {
 		glm::vec4 m_drawColor;
 		glm::vec4 m_clearColor;
 
-		float m_texIndex;
-
 		unsigned int m_vertSize, m_posSize, m_colorSize, m_texCoordSize, m_texIDSize;
 
 		Shader m_basicShader;
 
 		int m_samplerArray[32];
 		int m_slottedTexs[32];
+
+		int m_texBufferEnd;
 
 		int m_maxTexSlots;
 		int m_maxQuads;
