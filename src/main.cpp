@@ -142,12 +142,12 @@ int main(int argc, char** argv) {
 		renderer.Clear();
 
 		
-		//rect1.pos = glm::vec2((0.5f + sin(gameTime) * 0.5f) * (SCR_W*1.0f-rect1.size.x), (0.5f + cos(gameTime) * 0.5f) * (SCR_H * 1.0f - rect1.size.y));
+		rect1.pos = glm::vec2((0.5f + sin(gameTime) * 0.5f) * (SCR_W*1.0f-rect1.size.x), (0.5f + cos(gameTime) * 0.5f) * (SCR_H * 1.0f - rect1.size.y));
 		//rect1.size = glm::vec2((0.5f + sin(gameTime*0.9177f) * 0.5f) * SCR_W * 1.0f, (0.5f + cos(gameTime*1.17f) * 0.5f) * SCR_H * 1.0f);
 
 		renderer.SetDrawColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-		renderer.AddRect(rect1);
+		renderer.AddRect(rect1, sin(gameTime*13) * 45);
 
 		renderer.SetDrawColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 

@@ -36,7 +36,7 @@
     <ClCompile Include="src\Phil\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Phil\VertexArray.cpp">
+    <ClCompile Include="src\Phil\VertexArray1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vendor\glm\detail\glm.cpp">
@@ -74,7 +74,7 @@
     <ClInclude Include="src\Phil\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Phil\VertexArray.h">
+    <ClInclude Include="src\Phil\VertexArray1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\glm\detail\_features.hpp">

@@ -67,7 +67,6 @@ namespace Phil {
 	void Renderer::AddRect(const Phil::Rect& rect) {
 
 		if (m_quadCount == m_maxQuads) {
-			std::cout << "ding" << std::endl << std::endl;
 			DrawBatch();
 		}
 
@@ -141,34 +140,9 @@ namespace Phil {
 		m_vertBufferEnd += m_vertSize * 4;
 		m_quadCount++;
 
-		//m_vertices.insert(m_vertices.end(), {
-		//	//Pos						  //Color													  //Tex Coord - ID
-		//	point[0].x, point[0].y, 0.0f, m_drawColor.r, m_drawColor.g, m_drawColor.b, m_drawColor.a, 0.0f, 0.0f, 0.0f,
-		//	point[1].x, point[1].y, 0.0f, m_drawColor.r, m_drawColor.g, m_drawColor.b, m_drawColor.a, 1.0f, 0.0f, 0.0f,
-		//	point[2].x, point[2].y, 0.0f, m_drawColor.r, m_drawColor.g, m_drawColor.b, m_drawColor.a, 0.0f, 1.0f, 0.0f,
-		//	point[3].x, point[3].y, 0.0f, m_drawColor.r, m_drawColor.g, m_drawColor.b, m_drawColor.a, 1.0f, 1.0f, 0.0f
-		//	}
-		//);
-
-		/*unsigned int offset = (m_vertices.size() / m_vertSize) - 4;
-
-		m_indices.insert(m_indices.end(), {
-			offset + 0, offset + 1, offset + 2,
-			offset + 1, offset + 2, offset + 3
-			}
-		);*/
-
-		for (int i = 0; i < m_vertBufferEnd; i++) {
+		/*for (int i = 0; i < m_vertBufferEnd; i++) {
 			std::cout << m_vertices[i] << ", ";
 			if (((i + 1) % m_vertSize) == 0) {
-				std::cout << std::endl;
-			}
-		}
-		std::cout << std::endl;
-
-		/*for (int i = 0; i < m_indices.size(); i++) {
-			std::cout << m_indices[i] << ", ";
-			if (((i + 1) % 3) == 0) {
 				std::cout << std::endl;
 			}
 		}
@@ -179,14 +153,105 @@ namespace Phil {
 		//m_EBO.BufferSubData(0, sizeof(&m_indices[0]) * m_indices.size(), &m_indices[0]);
 	}
 
+	void Renderer::AddRect(const Phil::Rect& rect, float angle) {
+
+		if (m_quadCount == m_maxQuads) {
+			DrawBatch();
+		}
+
+		glm::mat4 model(1.0f);
+
+		model = glm::translate(model, glm::vec3(rect.pos, 0.0));
+		model = glm::translate(model, glm::vec3(0.5 * rect.size.x, 0.5 * rect.size.y, 0.0));
+		model = glm::rotate(model, glm::radians(angle) * 1.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-0.5 * rect.size.x, -0.5 * rect.size.y, 0.0));
+		model = glm::translate(model, glm::vec3(-rect.pos, 0.0));
+
+		glm::vec4 point[4];
+
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+
+		for (int i = 0; i < 4; i++) {
+			point[i] = m_projection * model * point[i];
+		}
+
+		// Vertex 1
+		m_vertices[m_vertBufferEnd + 0] = point[0].x;
+		m_vertices[m_vertBufferEnd + 1] = point[0].y;
+		m_vertices[m_vertBufferEnd + 2] = point[0].z;
+
+		m_vertices[m_vertBufferEnd + 3] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 4] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 5] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 6] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 7] = 0.0f;
+		m_vertices[m_vertBufferEnd + 8] = 0.0f;
+		m_vertices[m_vertBufferEnd + 9] = 0.0f;
+
+		// Vertex 2
+		m_vertices[m_vertBufferEnd + 10] = point[1].x;
+		m_vertices[m_vertBufferEnd + 11] = point[1].y;
+		m_vertices[m_vertBufferEnd + 12] = point[1].z;
+
+		m_vertices[m_vertBufferEnd + 13] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 14] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 15] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 16] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 17] = 1.0f;
+		m_vertices[m_vertBufferEnd + 18] = 0.0f;
+		m_vertices[m_vertBufferEnd + 19] = 0.0f;
+
+		// Vertex 3
+		m_vertices[m_vertBufferEnd + 20] = point[2].x;
+		m_vertices[m_vertBufferEnd + 21] = point[2].y;
+		m_vertices[m_vertBufferEnd + 22] = point[2].z;
+
+		m_vertices[m_vertBufferEnd + 23] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 24] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 25] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 26] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 27] = 0.0f;
+		m_vertices[m_vertBufferEnd + 28] = 1.0f;
+		m_vertices[m_vertBufferEnd + 29] = 0.0f;
+
+		// Vertex 4
+		m_vertices[m_vertBufferEnd + 30] = point[3].x;
+		m_vertices[m_vertBufferEnd + 31] = point[3].y;
+		m_vertices[m_vertBufferEnd + 32] = point[3].z;
+
+		m_vertices[m_vertBufferEnd + 33] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 34] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 35] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 36] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 37] = 1.0f;
+		m_vertices[m_vertBufferEnd + 38] = 1.0f;
+		m_vertices[m_vertBufferEnd + 39] = 0.0f;
+
+		m_vertBufferEnd += m_vertSize * 4;
+		m_quadCount++;
+
+		/*for (int i = 0; i < m_vertBufferEnd; i++) {
+			std::cout << m_vertices[i] << ", ";
+			if (((i + 1) % m_vertSize) == 0) {
+				std::cout << std::endl;
+			}
+		}
+		std::cout << std::endl;*/
+	}
+
 	void Renderer::DrawBatch()
 	{
 		Bind();
 		m_basicShader.use();
 		m_basicShader.set_iv("u_Textures", 32, m_samplerArray);
 		glDrawElements(GL_TRIANGLES, 6 * m_quadCount, GL_UNSIGNED_INT, 0);
-
-		std::cout << m_quadCount << " quad(s) drawn" << std::endl << std::endl;
 
 		m_quadCount = 0;
 		m_vertBufferEnd = 0;

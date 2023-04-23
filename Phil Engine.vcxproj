@@ -27,7 +27,7 @@
     <ClCompile Include="src\Phil\Opengl Objects\VertexBuffer.cpp" />
     <ClCompile Include="src\Phil\Rect.cpp" />
     <ClCompile Include="src\Phil\Renderer.cpp" />
-    <ClCompile Include="src\Phil\VertexArray.cpp" />
+    <ClCompile Include="src\Phil\VertexArray1.cpp" />
     <ClCompile Include="src\vendor\glad.c" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\stb_init.cpp" />
@@ -40,7 +40,7 @@
     <ClInclude Include="src\Phil\Opengl Objects\VertexBuffer.h" />
     <ClInclude Include="src\Phil\Rect.h" />
     <ClInclude Include="src\Phil\Renderer.h" />
-    <ClInclude Include="src\Phil\VertexArray.h" />
+    <ClInclude Include="src\Phil\VertexArray1.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />
