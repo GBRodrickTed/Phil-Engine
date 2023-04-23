@@ -105,6 +105,8 @@ int main(int argc, char** argv) {
 
 	Phil::Rect rect2 = { {150, 150}, {100, 100} };
 
+	Phil::Rect rect3 = { {250, 250}, {100, 100} };
+
 	bool wireMode = false;
 
 	//shader.use(); // important to do before setting uniforms
@@ -147,11 +149,13 @@ int main(int argc, char** argv) {
 
 		renderer.SetDrawColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-		renderer.AddRect(rect1, sin(gameTime*13) * 45);
+		renderer.AddRect(&texture1, rect1, sin(gameTime*11) * 45);
 
 		renderer.SetDrawColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
-		renderer.AddRect(&texture2, rect2);
+		renderer.AddRect(&texture1, rect2);
+
+		renderer.AddRect(&texture2, rect3);
 
 		renderer.DrawBatch();
 

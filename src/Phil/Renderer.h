@@ -33,6 +33,8 @@ namespace Phil {
 
 		void AddRect(Texture* texture, const Phil::Rect& rect);
 
+		void AddRect(Texture* texture, const Phil::Rect& rect, float angle);
+
 		void DrawBatch();
 
 		void Clear();

@@ -16,5 +16,5 @@ void main()
 	v_Pos = gl_Position.xyz;
 	v_Color = a_Color;
 	v_TexCoord = a_TexCoord;
-	v_TexIndex = a_TexIndex - 1;
+	v_TexIndex = a_TexIndex;
 }
