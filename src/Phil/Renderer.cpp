@@ -19,10 +19,10 @@ namespace Phil {
 
 		m_posSize = 3;
 		m_colorSize = 4;
-		m_texCoordSize = 2;
+		m_uvSize = 2;
 		m_texIDSize = 1;
 
-		m_vertSize = m_posSize + m_colorSize + m_texCoordSize + m_texIDSize;
+		m_vertSize = m_posSize + m_colorSize + m_uvSize + m_texIDSize;
 
 		m_vertices = new float[m_vertSize * 4 * (m_maxVerts + 2)]; // + 2 just in case
 		m_indices = new unsigned int[6 * (m_maxVerts + 2)];
@@ -32,8 +32,8 @@ namespace Phil {
 		m_vertBufferEnd = 0;
 		m_texBufferEnd = 0;
 
-		m_basicShader.CreateShaderFromFile("res/shaders/basic_V.shader", "res/shaders/basic_F.shader");
-		m_lineShader.CreateShaderFromFile("res/shaders/line_V.shader", "res/shaders/line_F.shader");
+		m_basicShader.CreateShaderFromFile("res/shaders/batch_tex_V.shader", "res/shaders/batch_tex_F.shader");
+		m_lineShader.CreateShaderFromFile("res/shaders/batch_basic_V.shader", "res/shaders/batch_basic_F.shader");
 
 		int index_offset = 0;
 		size_t index_size = 6 * m_maxVerts;
@@ -551,7 +551,7 @@ namespace Phil {
 
 			m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
 			m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-			m_VBO.VertexAttribPointer(2, m_texCoordSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
+			m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
 			m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
 
 			m_basicShader.use();
@@ -586,7 +586,7 @@ namespace Phil {
 
 			m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
 			m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-			m_VBO.VertexAttribPointer(2, m_texCoordSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
+			m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
 			m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
 
 			m_lineShader.use();

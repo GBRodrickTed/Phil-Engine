@@ -16,6 +16,7 @@
 #include "Phil/Opengl Objects/Shader.h"
 #include "Phil/Opengl Objects/GLDebug.h"
 #include "Phil/Renderer.h"
+#include "Phil/Window.h"
 
 
 
@@ -66,33 +67,30 @@ int main(int argc, char** argv) {
 
 	SDL_GL_SetSwapInterval(1); // vsync
 
-	SDL_Window* window = NULL;
-	window = SDL_CreateWindow(
+
+	//SDL_Window* window = NULL;
+	Phil::Window window;
+	window.CreateWindow(SDL_CreateWindow(
 		"Phil Engine",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		SCR_W,
 		SCR_H,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
-	);
-
-	SDL_GLContext context = SDL_GL_CreateContext(window);
-
-	gladLoadGLLoader(SDL_GL_GetProcAddress);
+	));
 
 	bool running = true;
 
 	SDL_Event event;
 
-	//Phil::Shader shader("res/shaders/basic_V.shader", "res/shaders/basic_F.shader");
-
-	glViewport(0, 0, SCR_W, SCR_H);
+	window.Resize(100, 100);
+	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GLCall(Phil::Renderer renderer(window));
-	GLCall(renderer.SetClearColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f)));
-	GLCall(renderer.SetDrawColor(glm::vec4(1.0f)));
+	Phil::Renderer renderer(window.GetWindow());
+	renderer.SetClearColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+	renderer.SetDrawColor(glm::vec4(1.0f));
 
 	Phil::Rect rect1 = { {0, 0}, {100, 100} };
 
@@ -130,6 +128,10 @@ int main(int argc, char** argv) {
 		}
 		renderer.Clear();
 		
+		renderer.AddRect(&texture1, rect3);
+
+		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
+		renderer.AddLine(150, 150, 250, 250);
 
 		renderer.Present();
 
@@ -138,7 +140,6 @@ int main(int argc, char** argv) {
 		FPS(60);
 	}
 
-	SDL_DestroyWindow(window);
 	glfwTerminate();
 	SDL_Quit();
 	return 0;

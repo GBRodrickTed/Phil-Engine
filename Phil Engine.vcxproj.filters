@@ -54,6 +54,9 @@
     <ClCompile Include="src\Phil\Opengl Objects\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Phil\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Phil\Opengl Objects\GLDebug.h">
@@ -932,6 +935,9 @@
     <ClInclude Include="src\Phil\Opengl Objects\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Phil\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -1342,9 +1348,9 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="res\shaders\basic_F.shader" />
-    <None Include="res\shaders\basic_V.shader" />
-    <None Include="res\shaders\line_F.shader" />
-    <None Include="res\shaders\line_V.shader" />
+    <None Include="res\shaders\batch_tex_F.shader" />
+    <None Include="res\shaders\batch_tex_V.shader" />
+    <None Include="res\shaders\batch_basic_F.shader" />
+    <None Include="res\shaders\batch_basic_V.shader" />
   </ItemGroup>
 </Project>

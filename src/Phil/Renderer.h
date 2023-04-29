@@ -57,7 +57,7 @@ namespace Phil {
 		struct Vertex {
 			float Position[3];
 			float Color[4];
-			float TexCoord[2];
+			float UV[2];
 			float TexID;
 		};
 
@@ -81,7 +81,7 @@ namespace Phil {
 
 		int m_vertBufferEnd;
 
-		unsigned int m_vertSize, m_posSize, m_colorSize, m_texCoordSize, m_texIDSize;
+		unsigned int m_vertSize, m_posSize, m_colorSize, m_uvSize, m_texIDSize;
 
 		Shader m_basicShader;
 		Shader m_lineShader;
