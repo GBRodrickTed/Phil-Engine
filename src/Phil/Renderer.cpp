@@ -597,6 +597,7 @@ namespace Phil {
 			m_VAO.Unbind();
 			break;
 		}
+		
 	}
 
 	void Renderer::Present() {

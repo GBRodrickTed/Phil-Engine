@@ -129,13 +129,13 @@ int main(int argc, char** argv) {
 			}
 		}
 		glm::ivec2 mouse;
+		glm::ivec2 gMouse;
 		SDL_GetMouseState(&mouse.x, &mouse.y);
-		mouse.x -= 400;
-		mouse.y -= 300;
+		gMouse = renderer.camera.TransMouse(mouse);
 
 		renderer.Clear();
 
-		renderer.camera.SetPos(glm::vec2(sin(gameTime) * 50 - mouse.x, cos(gameTime) * 50 - mouse.y));
+		renderer.camera.SetPos(glm::vec2(- gMouse.x, - gMouse.y));
 		
 		renderer.AddRect(&texture1, rect1);
 

@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include <vector>
+#include <iostream>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,6 +30,8 @@ namespace Phil
 		float GetY() const { return m_pos.y; };
 		float GetW() const { return m_size.x; };
 		float GetH() const { return m_size.y; };
+
+		glm::vec2 TransMouse(const glm::ivec2& mouse);
 
 		void SetCamera(float x, float y, float w, float h);
 

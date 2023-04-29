@@ -36,6 +36,17 @@ namespace Phil
 		this->UpdateMatrix();
 	}
 
+	glm::vec2 Camera::TransMouse(const glm::ivec2& mouse) {
+		glm::vec2 gMouse;
+
+		gMouse.x = ((float)mouse.x - m_size.x / 2);
+		gMouse.y = ((float)mouse.y - m_size.y / 2);
+
+		cout << gMouse.x << ", " << gMouse.y << endl;
+
+		return gMouse;
+	}
+
 	void Camera::UpdateMatrix() {
 		if (centered) {
 			m_matrix = glm::ortho((-m_size.x / 2 + m_pos.x), (m_size.x / 2 + m_pos.x), (m_size.y / 2 + m_pos.y), (-m_size.y / 2 + m_pos.y), -1.0f, 1.0f);
