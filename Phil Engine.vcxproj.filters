@@ -1344,5 +1344,7 @@
     </None>
     <None Include="res\shaders\basic_F.shader" />
     <None Include="res\shaders\basic_V.shader" />
+    <None Include="res\shaders\line_F.shader" />
+    <None Include="res\shaders\line_V.shader" />
   </ItemGroup>
 </Project>

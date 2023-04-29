@@ -18,14 +18,14 @@
 #include "Opengl Objects/Shader.h"
 #include "Rect.h"
 
+using namespace std;
+
 namespace Phil {
 	
 	class Renderer {
 	public:
-		Renderer();
+		Renderer(SDL_Window* window);
 		~Renderer();
-
-		void Bind();
 
 		void AddRect(const Phil::Rect& rect);
 
@@ -35,7 +35,13 @@ namespace Phil {
 
 		void AddRect(Texture* texture, const Phil::Rect& rect, float angle);
 
-		void DrawBatch();
+		void AddLine(float x1, float x2, float y1, float y2);
+
+		void AddLineRect(const Phil::Rect& rect);
+
+		void AddLineRect(const Phil::Rect& rect, float angle);
+
+		void Present();
 
 		void Clear();
 
@@ -54,24 +60,31 @@ namespace Phil {
 			float TexCoord[2];
 			float TexID;
 		};
+
+		void DrawBatch();
+
 		VertexArray m_VAO;
 		VertexBuffer m_VBO;
 		IndexBuffer m_EBO;
 
+		enum DrawType {
+			QUAD = 0,
+			LINE = 1
+		};
+
+		DrawType m_drawType;
+
 		float* m_vertices;
 		unsigned int* m_indices;
 
-		int m_quadCount;
+		int m_vertCount;
+
 		int m_vertBufferEnd;
-
-		glm::mat4 m_projection;
-
-		glm::vec4 m_drawColor;
-		glm::vec4 m_clearColor;
 
 		unsigned int m_vertSize, m_posSize, m_colorSize, m_texCoordSize, m_texIDSize;
 
 		Shader m_basicShader;
+		Shader m_lineShader;
 
 		int m_samplerArray[32];
 		int m_slottedTexs[32];
@@ -79,7 +92,14 @@ namespace Phil {
 		int m_texBufferEnd;
 
 		int m_maxTexSlots;
-		int m_maxQuads;
+		int m_maxVerts;
+
+		glm::mat4 m_projection;
+
+		glm::vec4 m_drawColor;
+		glm::vec4 m_clearColor;
+
+		SDL_Window* m_window;
 
 	};
 }

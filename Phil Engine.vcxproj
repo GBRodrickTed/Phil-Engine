@@ -330,6 +330,8 @@
   <ItemGroup>
     <None Include="res\shaders\basic_F.shader" />
     <None Include="res\shaders\basic_V.shader" />
+    <None Include="res\shaders\line_F.shader" />
+    <None Include="res\shaders\line_V.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />

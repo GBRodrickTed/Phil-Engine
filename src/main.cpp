@@ -46,7 +46,6 @@ void FPS(unsigned char fps) {
 	static duration<double> eventTime = duration<double>::zero();
 
 	duration<double> invFps = duration<double>{ 1. / fps };
-	//duration<double> invFps = duration_cast<system_clock::duration>(duration<double>{ 1. / fps });
 
 	eventTime = getTime() - currTime;
 	// :)
@@ -85,22 +84,13 @@ int main(int argc, char** argv) {
 
 	SDL_Event event;
 
-	//Phil::VertexArray1 vertArray;
-	//vertArray.Bind();
-
-	Phil::Shader shader;
-	shader.CreateShaderFromFile("res/shaders/basic_V.shader", "res/shaders/basic_F.shader");
+	//Phil::Shader shader("res/shaders/basic_V.shader", "res/shaders/basic_F.shader");
 
 	glViewport(0, 0, SCR_W, SCR_H);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
-	glm::mat4 projection = glm::ortho(0.0f, SCR_W * 1.0f, SCR_H * 1.0f, 0.0f, -1.0f, 1.0f);
-
-	GLCall(Phil::Renderer renderer);
-	GLCall(renderer.SetProjection(projection));
-	GLCall(renderer.SetShader(shader));
+	GLCall(Phil::Renderer renderer(window));
 	GLCall(renderer.SetClearColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f)));
 	GLCall(renderer.SetDrawColor(glm::vec4(1.0f)));
 
@@ -114,16 +104,8 @@ int main(int argc, char** argv) {
 
 	bool wireMode = false;
 
-	//shader.use(); // important to do before setting uniforms
-	//shader.set_iv("u_Textures", 32, samplers);
-	//shader.set_vec4("u_Color", glm::vec4(1, 1, 1, 1));
-
 	Phil::Texture texture1("res/gfx/pixel_phil.png");
 	Phil::Texture texture2("res/gfx/noob_shot.png");
-
-	//unsigned int texture[2] = {
-		//Phil::LoadTexture("res/gfx/pixel_david.png"), Phil::LoadTexture("res/gfx/pixel_phil.png")
-	//};
 
 	while (running) {
 		while (SDL_PollEvent(&event)) {
@@ -147,28 +129,16 @@ int main(int argc, char** argv) {
 			}
 		}
 		renderer.Clear();
-
 		
-		rect1.pos = glm::vec2((0.5f + sin(gameTime) * 0.5f) * (SCR_W*1.0f-rect1.size.x), (0.5f + cos(gameTime) * 0.5f) * (SCR_H * 1.0f - rect1.size.y));
-		//rect1.size = glm::vec2((0.5f + sin(gameTime*0.9177f) * 0.5f) * SCR_W * 1.0f, (0.5f + cos(gameTime*1.17f) * 0.5f) * SCR_H * 1.0f);
 
-		renderer.AddRect(&texture2, rect1, sin(gameTime*11) * 45);
-
-		renderer.AddRect(&texture1, rect2);
-
-		renderer.SetDrawColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
-		renderer.AddRect(rect4, sin(gameTime * 9) * 45);
-
-		renderer.AddRect(&texture1, rect3);
-
-		renderer.DrawBatch();
+		renderer.Present();
 
 		gameTime += frameTime;
 
-		SDL_GL_SwapWindow(window);
 		FPS(60);
 	}
 
+	SDL_DestroyWindow(window);
 	glfwTerminate();
 	SDL_Quit();
 	return 0;
