@@ -17,6 +17,8 @@
 
 #include "Opengl Objects/Shader.h"
 #include "Rect.h"
+#include "Window.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -24,7 +26,7 @@ namespace Phil {
 	
 	class Renderer {
 	public:
-		Renderer(SDL_Window* window);
+		Renderer(Phil::Window* window);
 		~Renderer();
 
 		void AddRect(const Phil::Rect& rect);
@@ -49,9 +51,9 @@ namespace Phil {
 
 		void SetClearColor(const glm::vec4& color);
 
-		void SetProjection(const glm::mat4& projection);
-
 		void SetShader(const Shader& shader);
+
+		Camera camera;
 
 	private:
 		struct Vertex {
@@ -94,12 +96,10 @@ namespace Phil {
 		int m_maxTexSlots;
 		int m_maxVerts;
 
-		glm::mat4 m_projection;
-
 		glm::vec4 m_drawColor;
 		glm::vec4 m_clearColor;
 
-		SDL_Window* m_window;
+		Phil::Window* m_window;
 
 	};
 }

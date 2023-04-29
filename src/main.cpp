@@ -88,11 +88,11 @@ int main(int argc, char** argv) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	Phil::Renderer renderer(window.GetWindow());
+	Phil::Renderer renderer(&window);
 	renderer.SetClearColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
 	renderer.SetDrawColor(glm::vec4(1.0f));
 
-	Phil::Rect rect1 = { {0, 0}, {100, 100} };
+	Phil::Rect rect1 = { {-50, -50}, {100, 100} };
 
 	Phil::Rect rect2 = { {150, 150}, {100, 100} };
 
@@ -104,6 +104,8 @@ int main(int argc, char** argv) {
 
 	Phil::Texture texture1("res/gfx/pixel_phil.png");
 	Phil::Texture texture2("res/gfx/noob_shot.png");
+
+	renderer.camera.centered = true;
 
 	while (running) {
 		while (SDL_PollEvent(&event)) {
@@ -126,9 +128,16 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
+		glm::ivec2 mouse;
+		SDL_GetMouseState(&mouse.x, &mouse.y);
+		mouse.x -= 400;
+		mouse.y -= 300;
+
 		renderer.Clear();
+
+		renderer.camera.SetPos(glm::vec2(sin(gameTime) * 50 - mouse.x, cos(gameTime) * 50 - mouse.y));
 		
-		renderer.AddRect(&texture1, rect3);
+		renderer.AddRect(&texture1, rect1);
 
 		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
 		renderer.AddLine(150, 150, 250, 250);

@@ -1,15 +1,15 @@
 #include "Renderer.h"
 
 namespace Phil {
-	Renderer::Renderer(SDL_Window* window) :m_VBO(GL_ARRAY_BUFFER), m_maxVerts(1000), m_vertCount(0), m_projection(glm::mat4(1.0f)), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
+	Renderer::Renderer(Phil::Window* window) :m_VBO(GL_ARRAY_BUFFER), m_maxVerts(1000), m_vertCount(0), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
 	{
 		m_window = window;
 
 		int window_w, window_h;
 
-		SDL_GetWindowSize(window, &window_w, &window_h);
+		SDL_GetWindowSize(window->GetWindow(), &window_w, &window_h);
 
-		m_projection = glm::ortho(0.0f, window_w * 1.0f, window_h * 1.0f, 0.0f, -1.0f, 1.0f);
+		camera.SetCamera(0, 0, window_w, window_h);
 
 		memset(m_slottedTexs, -1, 32 * sizeof(int));
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_maxTexSlots);
@@ -72,7 +72,7 @@ namespace Phil {
 		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
-			point[i] = m_projection * point[i];
+			point[i] = camera.GetMatrix() * point[i];
 		}
 
 		// Vertex 1
@@ -160,7 +160,7 @@ namespace Phil {
 		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
-			point[i] = m_projection * model * point[i];
+			point[i] = camera.GetMatrix() * model * point[i];
 		}
 
 		// Vertex 1
@@ -263,7 +263,7 @@ namespace Phil {
 		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
-			point[i] = m_projection * point[i];
+			point[i] = camera.GetMatrix() * point[i];
 		}
 
 		// Vertex 1
@@ -375,7 +375,7 @@ namespace Phil {
 		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
-			point[i] = m_projection * model * point[i];
+			point[i] = camera.GetMatrix() * model * point[i];
 		}
 
 		// Vertex 1
@@ -453,7 +453,7 @@ namespace Phil {
 		point[1] = glm::vec4{ y1, y2, 0.0f, 1.0f };
 
 		for (int i = 0; i < 2; i++) {
-			point[i] = m_projection * point[i];
+			point[i] = camera.GetMatrix() * point[i];
 		}
 
 		// Vertex 1
@@ -601,7 +601,7 @@ namespace Phil {
 
 	void Renderer::Present() {
 		this->DrawBatch();
-		SDL_GL_SwapWindow(m_window);
+		SDL_GL_SwapWindow(m_window->GetWindow());
 	}
 
 	void Renderer::Clear()
@@ -616,10 +616,6 @@ namespace Phil {
 
 	void Renderer::SetClearColor(const glm::vec4& color) {
 		m_clearColor = color;
-	}
-
-	void Renderer::SetProjection(const glm::mat4& projection) {
-		m_projection = projection;
 	}
 
 	void Renderer::SetShader(const Shader& shader) {
