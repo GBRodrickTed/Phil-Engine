@@ -603,7 +603,6 @@ namespace Phil {
 
 	void Renderer::Present() {
 		this->DrawBatch();
-		SDL_GL_SwapWindow(m_window->GetWindow());
 	}
 
 	void Renderer::Clear()

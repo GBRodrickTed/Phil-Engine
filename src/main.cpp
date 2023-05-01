@@ -23,8 +23,8 @@
 #include "imGui/backends/imgui_impl_sdl2.h"
 #include "imGui/backends/imgui_impl_opengl3.h"
 
-#define SCR_W 800
-#define SCR_H 600
+#define SCR_W 1280
+#define SCR_H 720
 
 using std::string;
 using std::cout;
@@ -148,6 +148,8 @@ int main(int argc, char** argv) {
 
 	bool wireMode = false;
 
+	bool showGui = true;
+
 	Phil::Texture texture1("res/gfx/pixel_phil.png");
 	Phil::Texture texture2("res/gfx/noob_shot.png");
 
@@ -194,6 +196,9 @@ int main(int argc, char** argv) {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 					}
 					break;
+				case SDLK_1:
+					showGui = !showGui;
+					break;
 				}
 				break;
 			case SDL_MOUSEWHEEL:
@@ -219,52 +224,68 @@ int main(int argc, char** argv) {
 		glm::ivec2 mouse;
 		glm::vec2 gMouse;
 		glm::vec2 scrSize = glm::vec2(SCR_W, SCR_H);
+		SDL_GetMouseState(&mouse.x, &mouse.y);
 
 		//float factor = 0.5f + ((0.5 * sin(gameTime * 2)) + 0.5) * 2;
 
 		renderer.camera.SetSize(glm::vec2(SCR_W * static_cast<float>(pow(factor, 2)), SCR_H * static_cast<float>(pow(factor, 2))));
-		renderer.camera.SetPos(rect1.pos + rect1.size / 2.0f - renderer.camera.GetSize()/2.0f);//glm::vec2(sin(gameTime * 2) * 50, cos(gameTime * 2) * 50) 
+		//renderer.camera.SetPos(rect1.pos + rect1.size / 2.0f - renderer.camera.GetSize()/2.0f);//glm::vec2(sin(gameTime * 2) * 50, cos(gameTime * 2) * 50) 
 		//renderer.camera.SetPos((glm::vec2)mouse - scrSize/2.0f - renderer.camera.GetSize() / 2.0f);
-		//renderer.camera.SetPos(glm::vec2(sin(gameTime * 2) * 50, cos(gameTime * 2) * 50));
-		SDL_GetMouseState(&mouse.x, &mouse.y);
+		renderer.camera.SetPos(renderer.camera.GetSize() / -2.0f);
+		
 		gMouse = renderer.camera.TransMouse(mouse);
-		rect2.pos = gMouse;
 
-		{
-			static float f = 0.0f;
-			static int counter = 0;
-
-			ImGui::Begin("Hello, world!"); // Create a window called "Hello,
-			// world!" and append into it.
-
-			ImGui::Text(
-				"This is some useful text."); // Display some text (you can use
-			// a format strings too)
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-				1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
-		}
+		rect2.pos = gMouse - (rect2.size / 2.0f);
+		rect2.size = glm::vec2(50 + sin(gameTime*3) * 25, 50 - sin(gameTime * 3) * 25);
 
 		renderer.Clear();
-		
+
 		renderer.AddRect(&texture1, rect2);
+
 		renderer.AddLine(gMouse.x, gMouse.y, 0, 0);
 		renderer.AddRect(&texture2, rect1);
 		renderer.AddRect(&texture2, rect4);
-		
+
 		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
+
+		renderer.Present();
+
+		if (showGui)
+		{
+
+			ImGui::Begin("Tools"); // Create a window called "Hello,
+			// world!" and append into it.
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+				1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+			ImGui::Text("Mouse World Coords: [ x:%.3f, y:%.3f ]",
+				gMouse.x, gMouse.y);
+
+			ImGui::SliderFloat("float", &factor, 0.1f,
+				5.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+
+			ImGui::End();
+		}
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		renderer.Present();
+		SDL_GL_SwapWindow(window.GetWindow());
 
 		gameTime += frameTime;
 
-		FPS(160);
+		FPS(60);
 	}
+#ifdef __EMSCRIPTEN__
+	EMSCRIPTEN_MAINLOOP_END;
+#endif
 
-	glfwTerminate();
+	// Cleanup
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
+	SDL_GL_DeleteContext(gl_context);
 	SDL_Quit();
 	return 0;
 }
