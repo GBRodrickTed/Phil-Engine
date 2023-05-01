@@ -31,9 +31,14 @@ namespace Phil
 		float GetW() const { return m_size.x; };
 		float GetH() const { return m_size.y; };
 
+		glm::vec2 GetPos() const { return m_pos; };
+		glm::vec2 GetSize() const { return m_size; };
+
 		glm::vec2 TransMouse(const glm::ivec2& mouse);
 
-		void SetCamera(float x, float y, float w, float h);
+		void SetCameraMat(float x, float y, float w, float h);
+
+		void SetWindowMat(int w, int h);
 
 		void SetPos(const glm::vec2& pos);
 
@@ -46,6 +51,8 @@ namespace Phil
 		void UpdateMatrix();
 
 		glm::mat4 m_matrix;
+		glm::mat4 m_windowMat;
+		glm::vec2 m_windowSize;
 
 		glm::vec2 m_pos;
 		glm::vec2 m_size;

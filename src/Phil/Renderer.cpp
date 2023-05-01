@@ -9,7 +9,8 @@ namespace Phil {
 
 		SDL_GetWindowSize(window->GetWindow(), &window_w, &window_h);
 
-		camera.SetCamera(0, 0, window_w, window_h);
+		camera.SetCameraMat(0, 0, window_w, window_h);
+		camera.SetWindowMat(window_w, window_h);
 
 		memset(m_slottedTexs, -1, 32 * sizeof(int));
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_maxTexSlots);

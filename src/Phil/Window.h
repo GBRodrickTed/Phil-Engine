@@ -15,7 +15,6 @@ namespace Phil
 		Window(SDL_Window* window);
 		Window() {
 			m_window = NULL;
-			m_context = NULL;
 			m_width = 0;
 			m_height = 0;
 		};
@@ -33,7 +32,6 @@ namespace Phil
 
 	private:
 		SDL_Window* m_window;
-		SDL_GLContext m_context;
 		int m_width;
 		int m_height;
 	};
