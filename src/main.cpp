@@ -153,6 +153,8 @@ int main(int argc, char** argv) {
 	Phil::Texture texture1("res/gfx/pixel_phil.png");
 	Phil::Texture texture2("res/gfx/noob_shot.png");
 
+	Phil::Shader shader1("res/shaders/basic_V.shader", "res/shaders/basic_F.shader");
+
 	float factor = 1;
 
 	while (running) {
@@ -238,13 +240,20 @@ int main(int argc, char** argv) {
 		rect2.pos = gMouse - (rect2.size / 2.0f);
 		rect2.size = glm::vec2(50 + sin(gameTime*3) * 25, 50 - sin(gameTime * 3) * 25);
 
+		shader1.Bind();
+		shader1.set_f("gTime", gameTime);
+		shader1.set_i("u_Texture", 1);
+		shader1.Unbind();
+
 		renderer.Clear();
 
 		renderer.AddRect(&texture1, rect2);
 
 		renderer.AddLine(gMouse.x, gMouse.y, 0, 0);
-		renderer.AddRect(&texture2, rect1);
+		renderer.DrawRect(&texture2, rect1, shader1);
 		renderer.AddRect(&texture2, rect4);
+
+		
 
 		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
 

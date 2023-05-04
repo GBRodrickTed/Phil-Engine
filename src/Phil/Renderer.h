@@ -29,6 +29,8 @@ namespace Phil {
 		Renderer(Phil::Window* window);
 		~Renderer();
 
+		unsigned int GetScreenTexture() const;
+
 		void AddRect(const Phil::Rect& rect);
 
 		void AddRect(const Phil::Rect& rect, float angle);
@@ -42,6 +44,10 @@ namespace Phil {
 		void AddLineRect(const Phil::Rect& rect);
 
 		void AddLineRect(const Phil::Rect& rect, float angle);
+
+		void DrawRect(const Phil::Rect& rect, Phil::Shader& shader);
+
+		void DrawRect(Texture* texture, const Phil::Rect& rect, Phil::Shader& shader);
 
 		void Present();
 
@@ -85,8 +91,8 @@ namespace Phil {
 
 		unsigned int m_vertSize, m_posSize, m_colorSize, m_uvSize, m_texIDSize;
 
-		Shader m_basicShader;
-		Shader m_lineShader;
+		Shader m_texBatchShader;
+		Shader m_lineBatchShader;
 
 		int m_samplerArray[32];
 		int m_slottedTexs[32];
@@ -95,6 +101,9 @@ namespace Phil {
 
 		int m_maxTexSlots;
 		int m_maxVerts;
+
+		unsigned int m_framebuffer;
+		unsigned int m_screenTexture;
 
 		glm::vec4 m_drawColor;
 		glm::vec4 m_clearColor;

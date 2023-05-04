@@ -1404,7 +1404,7 @@
     </None>
     <None Include="res\shaders\batch_tex_F.shader" />
     <None Include="res\shaders\batch_tex_V.shader" />
-    <None Include="res\shaders\batch_basic_F.shader" />
-    <None Include="res\shaders\batch_basic_V.shader" />
+    <None Include="res\shaders\basic_F.shader" />
+    <None Include="res\shaders\basic_V.shader" />
   </ItemGroup>
 </Project>

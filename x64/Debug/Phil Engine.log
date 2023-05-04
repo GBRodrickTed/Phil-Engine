@@ -1,5 +1,4 @@
-﻿  main.cpp
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\main.cpp(207,19): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\main.cpp(211,19): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\main.cpp(213,19): warning C4305: '=': truncation from 'double' to 'float'
+﻿  Renderer.cpp
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Phil\Renderer.cpp(12,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Phil\Renderer.cpp(12,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe

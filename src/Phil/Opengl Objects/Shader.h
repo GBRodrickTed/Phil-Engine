@@ -24,8 +24,10 @@ namespace Phil {
 
 		~Shader();
 
-		void use();
+		void Bind();
+		void Unbind();
 		void CreateShaderFromFile(const char* vertexPath, const char* fragmentPath);
+		void CreateShaderFromString(const char* vertexCode, const char* fragmentCode);
 		void set_b(const std::string& name, bool value) const;
 		void set_i(const std::string& name, int value) const;
 		void set_iv(const std::string& name, int count, int* value) const;

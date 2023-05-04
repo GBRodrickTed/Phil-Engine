@@ -78,15 +78,66 @@ namespace Phil {
 		glDeleteShader(fragment);
 	}
 
+	void Shader::CreateShaderFromString(const char* vertexCode, const char* fragmentCode)
+	{
+
+		const char* vShaderCode = vertexCode;
+		const char* fShaderCode = fragmentCode;
+
+		unsigned int vertex, fragment;
+		int success;
+		char infoLog[512];
+
+		vertex = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex, 1, &vShaderCode, NULL);
+		glCompileShader(vertex);
+		glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+
+		if (!success) {
+			glGetShaderInfoLog(vertex, 512, NULL, infoLog);
+			std::cout << "Shader.h: Error! Vertex No Compile Good. \n" << infoLog << std::endl;
+		}
+
+		fragment = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment, 1, &fShaderCode, NULL);
+		glCompileShader(fragment);
+		glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+
+		if (!success) {
+			glGetShaderInfoLog(fragment, 512, NULL, infoLog);
+			std::cout << "Shader.h: Error! Fragment No Compile Good. \n" << infoLog << std::endl;
+		}
+
+		m_Program = glCreateProgram();
+		glAttachShader(m_Program, vertex);
+		glAttachShader(m_Program, fragment);
+		glLinkProgram(m_Program);
+
+		glGetProgramiv(m_Program, GL_LINK_STATUS, &success);
+		if (!success) {
+			glGetProgramInfoLog(m_Program, 512, NULL, infoLog);
+			std::cout << "Shader.h: Error! Link Fail\n" << infoLog << std::endl;
+		}
+
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+	}
+
 	Shader::~Shader()
 	{
+		glDeleteProgram(m_Program);
 		glUseProgram(0);
 	}
 
 
-	void Shader::use()
+	void Shader::Bind()
 	{
 		glUseProgram(m_Program);
+	}
+
+	void Shader::Unbind()
+	{
+		glUseProgram(0);
 	}
 
 	void Shader::set_b(const std::string& name, bool value) const
