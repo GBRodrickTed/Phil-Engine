@@ -821,7 +821,11 @@ namespace Phil {
 		m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
 		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+
 		shader.Bind();
+		shader.set_i("SCREEN_TEXTURE", 0);
 		glDrawElements(GL_TRIANGLES, 6 * (m_vertCount / 4), GL_UNSIGNED_INT, 0);
 		shader.Unbind();
 
@@ -941,6 +945,102 @@ namespace Phil {
 
 	}
 
+	void Renderer::DrawScreen(Phil::Shader& shader) {
+		if (m_vertCount > 0) {
+			this->DrawBatch();
+		}
+
+		int texIndex = -1;
+
+		glm::vec4 point[4];
+
+		point[0] = glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f };
+		point[1] = glm::vec4{ -1.0f, 1.0f, 0.0f, 1.0f };
+		point[2] = glm::vec4{ 1.0f, -1.0f, 0.0f, 1.0f };
+		point[3] = glm::vec4{ -1.0f, -1.0f, 0.0f, 1.0f };
+
+		// Vertex 1
+		m_vertices[m_vertBufferEnd + 0] = point[0].x;
+		m_vertices[m_vertBufferEnd + 1] = point[0].y;
+		m_vertices[m_vertBufferEnd + 2] = point[0].z;
+
+		m_vertices[m_vertBufferEnd + 3] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 4] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 5] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 6] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 7] = 0.0f;
+		m_vertices[m_vertBufferEnd + 8] = 0.0f;
+		m_vertices[m_vertBufferEnd + 9] = float(texIndex);
+
+		// Vertex 2
+		m_vertices[m_vertBufferEnd + 10] = point[1].x;
+		m_vertices[m_vertBufferEnd + 11] = point[1].y;
+		m_vertices[m_vertBufferEnd + 12] = point[1].z;
+
+		m_vertices[m_vertBufferEnd + 13] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 14] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 15] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 16] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 17] = 1.0f;
+		m_vertices[m_vertBufferEnd + 18] = 0.0f;
+		m_vertices[m_vertBufferEnd + 19] = float(texIndex);
+
+		// Vertex 3
+		m_vertices[m_vertBufferEnd + 20] = point[2].x;
+		m_vertices[m_vertBufferEnd + 21] = point[2].y;
+		m_vertices[m_vertBufferEnd + 22] = point[2].z;
+
+		m_vertices[m_vertBufferEnd + 23] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 24] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 25] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 26] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 27] = 0.0f;
+		m_vertices[m_vertBufferEnd + 28] = 1.0f;
+		m_vertices[m_vertBufferEnd + 29] = float(texIndex);
+
+		// Vertex 4
+		m_vertices[m_vertBufferEnd + 30] = point[3].x;
+		m_vertices[m_vertBufferEnd + 31] = point[3].y;
+		m_vertices[m_vertBufferEnd + 32] = point[3].z;
+
+		m_vertices[m_vertBufferEnd + 33] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 34] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 35] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 36] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 37] = 1.0f;
+		m_vertices[m_vertBufferEnd + 38] = 1.0f;
+		m_vertices[m_vertBufferEnd + 39] = float(texIndex);
+
+		m_vertBufferEnd += m_vertSize * 4;
+		m_vertCount += 4;
+
+		m_VAO.Bind();
+		m_VBO.BufferData(sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+		m_EBO.BufferData(sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+
+		m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+		m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+		m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
+		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+
+		shader.Bind();
+		shader.set_i("SCREEN_TEXTURE", 0);
+		glDrawElements(GL_TRIANGLES, 6 * (m_vertCount / 4), GL_UNSIGNED_INT, 0);
+		shader.Unbind();
+
+		m_vertCount = 0;
+		m_vertBufferEnd = 0;
+		m_texBufferEnd = 0;
+		m_VAO.Unbind();
+	}
+
 	void Renderer::DrawBatch()
 	{
 		switch (m_drawType) {
@@ -1006,13 +1106,13 @@ namespace Phil {
 		this->DrawBatch();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		float screen_vert[] = {
-			1.0f,  1.0f, 1.0f, 0.0f,
-			-1.0f,  1.0f, 0.0f, 0.0f,
-			-1.0f, -1.0f, 0.0f, 1.0f,
+			1.0f,  1.0f, 1.0f, 1.0f,
+			-1.0f,  1.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f,
 
-			1.0f,  1.0f, 1.0f, 0.0f,
-			1.0f,  -1.0f, 1.0f, 1.0f,
-			-1.0f, -1.0f, 0.0f, 1.0f
+			1.0f,  1.0f, 1.0f, 1.0f,
+			1.0f,  -1.0f, 1.0f, 0.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f
 		};
 		Phil::Shader screenShader;
 		screenShader.CreateShaderFromString(
@@ -1040,14 +1140,24 @@ namespace Phil {
 			"\n"
 			"uniform sampler2D u_Texture;\n"
 			"\n"
+			"vec2 SineWave(vec2 p)\n"
+			"{\n"
+			"    // convert Vertex position <-1,+1> to texture coordinate <0,1> and some shrinking so the effect dont overlap screen\n"
+			"\tfloat ty = 0;\n"
+			"\tfloat tx = 0;\n"
+			"    p.x = (0.55 * p.x) + 0.5;\n"
+			"    p.y = (-0.55 * p.y) + 0.5;\n"
+			"    // wave distortion\n"
+			"    float x = sin(25.0 * p.y + 30.0 * p.x + 6.28 * tx) * 0.05;\n"
+			"    float y = sin(25.0 * p.y + 30.0 * p.x + 6.28 * ty) * 0.05;\n"
+			"    return vec2(p.x + x, p.y + y);\n"
+			"}\n"
+			"\n"
 			"void main() {\n"
 			"\n"
-			"\tvec2 newUV = vec2(v_Pos.x, v_Pos.y);\n"
-			"\tvec4 tex1 = texture(u_Texture, (newUV+1)/2);\n"
-			"\tvec4 resultColor = tex1;\n"
-			"\n"
-			"\tFragColor = resultColor;\n"
-			"}"
+			"\tFragColor = texture(u_Texture, v_UV);\n"
+			"}\n"
+			""
 			);
 
 		Phil::VertexArray m_VAO1;

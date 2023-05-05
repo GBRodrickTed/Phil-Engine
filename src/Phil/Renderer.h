@@ -49,6 +49,8 @@ namespace Phil {
 
 		void DrawRect(Texture* texture, const Phil::Rect& rect, Phil::Shader& shader);
 
+		void DrawScreen(Phil::Shader& shader);
+
 		void Present();
 
 		void Clear();
