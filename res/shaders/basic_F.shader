@@ -45,5 +45,5 @@ void main() {
 
 	//FragColor = resultColor;
 
-	FragColor = texture(u_Texture, SineWave(betterUV));
+	FragColor = texture(u_Texture, betterUV);
 }
