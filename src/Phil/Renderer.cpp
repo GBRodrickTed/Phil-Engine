@@ -245,6 +245,7 @@ namespace Phil {
 			""
 		);
 
+		// Setting FrameBuffer Texture Vertex
 		m_screen_vert[0] = 1.0f;
 		m_screen_vert[1] = 1.0f;
 		m_screen_vert[2] = 1.0f;
@@ -332,10 +333,10 @@ namespace Phil {
 
 		glm::vec4 point[4];
 
-		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
-		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
-		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
-		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
 			point[i] = camera.GetMatrix() * point[i];
@@ -420,13 +421,13 @@ namespace Phil {
 
 		glm::vec4 point[4];
 
-		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
-		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
-		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
-		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
-			point[i] = camera.GetMatrix() * model * point[i];
+			point[i] = camera.GetMatrix() * point[i];
 		}
 
 		// Vertex 1
@@ -523,10 +524,10 @@ namespace Phil {
 
 		glm::vec4 point[4];
 
-		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
-		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
-		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
-		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
 			point[i] = camera.GetMatrix() * point[i];
@@ -635,13 +636,13 @@ namespace Phil {
 
 		glm::vec4 point[4];
 
-		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
-		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
-		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
-		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
-			point[i] = camera.GetMatrix() * model * point[i];
+			point[i] = camera.GetMatrix() * point[i];
 		}
 
 		// Vertex 1
@@ -816,10 +817,10 @@ namespace Phil {
 
 		glm::vec4 point[4];
 
-		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
-		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
-		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
-		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
 			point[i] = camera.GetMatrix() * point[i];
@@ -924,10 +925,10 @@ namespace Phil {
 
 		glm::vec4 point[4];
 
-		point[0] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
-		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
-		point[2] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
-		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[0] = glm::vec4{ rect.pos.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y + rect.size.y, 0.0f, 1.0f };
+		point[2] = glm::vec4{ rect.pos.x, rect.pos.y, 0.0f, 1.0f };
+		point[3] = glm::vec4{ rect.pos.x + rect.size.x, rect.pos.y, 0.0f, 1.0f };
 
 		for (int i = 0; i < 4; i++) {
 			point[i] = camera.GetMatrix() * point[i];
@@ -1033,10 +1034,10 @@ namespace Phil {
 
 		glm::vec4 point[4];
 
-		point[0] = glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f };
-		point[1] = glm::vec4{ -1.0f, 1.0f, 0.0f, 1.0f };
-		point[2] = glm::vec4{ 1.0f, -1.0f, 0.0f, 1.0f };
-		point[3] = glm::vec4{ -1.0f, -1.0f, 0.0f, 1.0f };
+		point[0] = glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f };   // 800, 0 or not
+		point[1] = glm::vec4{ -1.0f, 1.0f, 0.0f, 1.0f };  // 0, 0
+		point[2] = glm::vec4{ 1.0f, -1.0f, 0.0f, 1.0f };  // 800, 600
+		point[3] = glm::vec4{ -1.0f, -1.0f, 0.0f, 1.0f }; // 0, 600
 
 		// Vertex 1
 		m_vertices[m_vertBufferEnd + 0] = point[0].x;

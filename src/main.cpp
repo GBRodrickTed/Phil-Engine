@@ -255,7 +255,8 @@ int main(int argc, char** argv) {
 		renderer.AddRect(&texture2, rect4);
 		//renderer.DrawRect(&texture2, rect1, shader1);
 
-		renderer.DrawScreen(shader1);
+		//renderer.DrawScreen(shader1);
+
 
 		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
 

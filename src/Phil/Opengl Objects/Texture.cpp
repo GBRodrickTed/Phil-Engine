@@ -15,7 +15,7 @@ namespace Phil
 		unsigned int min_filter, unsigned int mag_filter,
 		unsigned int texwrap_s, unsigned int texwrap_t)
 	{
-		stbi_set_flip_vertically_on_load(false);
+		stbi_set_flip_vertically_on_load(true);
 
 		m_canDelete = true;
 		m_texture = new unsigned int;
