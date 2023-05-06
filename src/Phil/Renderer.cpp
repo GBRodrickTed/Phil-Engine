@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 namespace Phil {
-	Renderer::Renderer(Phil::Window* window) :m_VBO(GL_ARRAY_BUFFER), m_maxVerts(1000), m_vertCount(0), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
+	Renderer::Renderer(Phil::Window* window) :m_VBO(GL_ARRAY_BUFFER), m_VBO_scr(GL_ARRAY_BUFFER), m_maxVerts(1000), m_vertCount(0), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
 	{
 		m_window = window;
 
@@ -213,6 +213,70 @@ namespace Phil {
 			"}"
 		);
 
+		m_screenShader.CreateShaderFromString(
+			"#version 330 core\n"
+			"layout(location = 0) in vec3 a_Pos;\n"
+			"layout(location = 1) in vec2 a_UV;\n"
+			"\n"
+			"out vec3 v_Pos;\n"
+			"out vec2 v_UV;\n"
+			"\n"
+			"void main()\n"
+			"{\n"
+			"\tgl_Position = vec4(a_Pos, 1.0f);\n"
+			"\n"
+			"\tv_Pos = gl_Position.xyz;\n"
+			"\tv_UV = a_UV;\n"
+			"}"
+			,
+			"#version 330 core\n"
+			"\n"
+			"out vec4 FragColor;\n"
+			"\n"
+			"in vec3 v_Pos;\n"
+			"in vec2 v_UV;\n"
+			"\n"
+			"uniform sampler2D u_Texture;\n"
+			"\n"
+			"void main() {\n"
+			"\n"
+			"\tFragColor = texture(u_Texture, v_UV);\n"
+			"}\n"
+			""
+		);
+
+		m_screen_vert[0] = 1.0f;
+		m_screen_vert[1] = 1.0f;
+		m_screen_vert[2] = 1.0f;
+		m_screen_vert[3] = 1.0f;
+
+		m_screen_vert[4] = -1.0f;
+		m_screen_vert[5] = 1.0f;
+		m_screen_vert[6] = 0.0f;
+		m_screen_vert[7] = 1.0f;
+
+		m_screen_vert[8] = -1.0f;
+		m_screen_vert[9] = -1.0f;
+		m_screen_vert[10] = 0.0f;
+		m_screen_vert[11] = 0.0f;
+
+		m_screen_vert[12] = 1.0f;
+		m_screen_vert[13] = 1.0f;
+		m_screen_vert[14] = 1.0f;
+		m_screen_vert[15] = 1.0f;
+
+		m_screen_vert[16] = 1.0f;
+		m_screen_vert[17] = -1.0f;
+		m_screen_vert[18] = 1.0f;
+		m_screen_vert[19] = 0.0f;
+
+		m_screen_vert[20] = -1.0f;
+		m_screen_vert[21] = -1.0f;
+		m_screen_vert[22] = 0.0f;
+		m_screen_vert[23] = 0.0f;
+
+		
+
 		int index_offset = 0;
 		size_t index_size = 6 * m_maxVerts;
 
@@ -228,19 +292,27 @@ namespace Phil {
 			index_offset += 4;
 		}
 
+		m_currTex = false;
+
 		glGenFramebuffers(1, &m_framebuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 
 		// generate texture
-		glGenTextures(1, &m_screenTexture);
-		glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+		glGenTextures(2, m_scrTexture);
+		glBindTexture(GL_TEXTURE_2D, m_scrTexture[0]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, window_w, window_h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glBindTexture(GL_TEXTURE_2D, m_scrTexture[1]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, window_w, window_h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// attach it to currently bound framebuffer object
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_screenTexture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_scrTexture[m_currTex], 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	}
@@ -822,7 +894,7 @@ namespace Phil {
 		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+		glBindTexture(GL_TEXTURE_2D, m_scrTexture[m_currTex]);
 
 		shader.Bind();
 		shader.set_i("SCREEN_TEXTURE", 0);
@@ -845,6 +917,8 @@ namespace Phil {
 		if (m_vertCount > 0) {
 			this->DrawBatch();
 		}
+
+		this->SwapFrameBuffer();
 
 		int texIndex = -1;
 
@@ -927,8 +1001,10 @@ namespace Phil {
 		m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
 		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
 
+		//this->SwapFrameBuffer();
+
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+		glBindTexture(GL_TEXTURE_2D, m_scrTexture[!m_currTex]);
 
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, texture->GetTextureID());
@@ -938,17 +1014,20 @@ namespace Phil {
 		glDrawElements(GL_TRIANGLES, 6 * (m_vertCount / 4), GL_UNSIGNED_INT, 0);
 		shader.Unbind();
 
+		//this->SwapFrameBuffer();
+
 		m_vertCount = 0;
 		m_vertBufferEnd = 0;
 		m_texBufferEnd = 0;
 		m_VAO.Unbind();
-
 	}
 
 	void Renderer::DrawScreen(Phil::Shader& shader) {
 		if (m_vertCount > 0) {
 			this->DrawBatch();
 		}
+
+		this->SwapFrameBuffer();
 
 		int texIndex = -1;
 
@@ -969,8 +1048,8 @@ namespace Phil {
 		m_vertices[m_vertBufferEnd + 5] = m_drawColor.b;
 		m_vertices[m_vertBufferEnd + 6] = m_drawColor.a;
 
-		m_vertices[m_vertBufferEnd + 7] = 0.0f;
-		m_vertices[m_vertBufferEnd + 8] = 0.0f;
+		m_vertices[m_vertBufferEnd + 7] = 1.0f;
+		m_vertices[m_vertBufferEnd + 8] = 1.0f;
 		m_vertices[m_vertBufferEnd + 9] = float(texIndex);
 
 		// Vertex 2
@@ -983,8 +1062,8 @@ namespace Phil {
 		m_vertices[m_vertBufferEnd + 15] = m_drawColor.b;
 		m_vertices[m_vertBufferEnd + 16] = m_drawColor.a;
 
-		m_vertices[m_vertBufferEnd + 17] = 1.0f;
-		m_vertices[m_vertBufferEnd + 18] = 0.0f;
+		m_vertices[m_vertBufferEnd + 17] = 0.0f;
+		m_vertices[m_vertBufferEnd + 18] = 1.0f;
 		m_vertices[m_vertBufferEnd + 19] = float(texIndex);
 
 		// Vertex 3
@@ -997,8 +1076,8 @@ namespace Phil {
 		m_vertices[m_vertBufferEnd + 25] = m_drawColor.b;
 		m_vertices[m_vertBufferEnd + 26] = m_drawColor.a;
 
-		m_vertices[m_vertBufferEnd + 27] = 0.0f;
-		m_vertices[m_vertBufferEnd + 28] = 1.0f;
+		m_vertices[m_vertBufferEnd + 27] = 1.0f;
+		m_vertices[m_vertBufferEnd + 28] = 0.0f;
 		m_vertices[m_vertBufferEnd + 29] = float(texIndex);
 
 		// Vertex 4
@@ -1011,8 +1090,8 @@ namespace Phil {
 		m_vertices[m_vertBufferEnd + 35] = m_drawColor.b;
 		m_vertices[m_vertBufferEnd + 36] = m_drawColor.a;
 
-		m_vertices[m_vertBufferEnd + 37] = 1.0f;
-		m_vertices[m_vertBufferEnd + 38] = 1.0f;
+		m_vertices[m_vertBufferEnd + 37] = 0.0f;
+		m_vertices[m_vertBufferEnd + 38] = 0.0f;
 		m_vertices[m_vertBufferEnd + 39] = float(texIndex);
 
 		m_vertBufferEnd += m_vertSize * 4;
@@ -1028,7 +1107,7 @@ namespace Phil {
 		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+		glBindTexture(GL_TEXTURE_2D, m_scrTexture[!m_currTex]);
 
 		shader.Bind();
 		shader.set_i("SCREEN_TEXTURE", 0);
@@ -1105,79 +1184,22 @@ namespace Phil {
 	void Renderer::Present() {
 		this->DrawBatch();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		float screen_vert[] = {
-			1.0f,  1.0f, 1.0f, 1.0f,
-			-1.0f,  1.0f, 0.0f, 1.0f,
-			-1.0f, -1.0f, 0.0f, 0.0f,
+		
 
-			1.0f,  1.0f, 1.0f, 1.0f,
-			1.0f,  -1.0f, 1.0f, 0.0f,
-			-1.0f, -1.0f, 0.0f, 0.0f
-		};
-		Phil::Shader screenShader;
-		screenShader.CreateShaderFromString(
-			"#version 330 core\n"
-			"layout(location = 0) in vec3 a_Pos;\n"
-			"layout(location = 1) in vec2 a_UV;\n"
-			"\n"
-			"out vec3 v_Pos;\n"
-			"out vec2 v_UV;\n"
-			"\n"
-			"void main()\n"
-			"{\n"
-			"\tgl_Position = vec4(a_Pos, 1.0f);\n"
-			"\n"
-			"\tv_Pos = gl_Position.xyz;\n"
-			"\tv_UV = a_UV;\n"
-			"}"
-			,
-			"#version 330 core\n"
-			"\n"
-			"out vec4 FragColor;\n"
-			"\n"
-			"in vec3 v_Pos;\n"
-			"in vec2 v_UV;\n"
-			"\n"
-			"uniform sampler2D u_Texture;\n"
-			"\n"
-			"vec2 SineWave(vec2 p)\n"
-			"{\n"
-			"    // convert Vertex position <-1,+1> to texture coordinate <0,1> and some shrinking so the effect dont overlap screen\n"
-			"\tfloat ty = 0;\n"
-			"\tfloat tx = 0;\n"
-			"    p.x = (0.55 * p.x) + 0.5;\n"
-			"    p.y = (-0.55 * p.y) + 0.5;\n"
-			"    // wave distortion\n"
-			"    float x = sin(25.0 * p.y + 30.0 * p.x + 6.28 * tx) * 0.05;\n"
-			"    float y = sin(25.0 * p.y + 30.0 * p.x + 6.28 * ty) * 0.05;\n"
-			"    return vec2(p.x + x, p.y + y);\n"
-			"}\n"
-			"\n"
-			"void main() {\n"
-			"\n"
-			"\tFragColor = texture(u_Texture, v_UV);\n"
-			"}\n"
-			""
-			);
+		m_VAO_scr.Bind();
+		m_VBO_scr.BufferData(sizeof(float) * 4 * 6, &m_screen_vert[0], GL_STATIC_DRAW);
 
-		Phil::VertexArray m_VAO1;
-		Phil::VertexBuffer m_VBO1(GL_ARRAY_BUFFER);
-		Phil::IndexBuffer m_EBO1;
-
-		m_VAO1.Bind();
-		m_VBO1.BufferData(sizeof(float)*4 * 6, &screen_vert[0], GL_STATIC_DRAW);
-
-		m_VBO1.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(0));
-		m_VBO1.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
+		m_VBO_scr.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(0));
+		m_VBO_scr.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+		glBindTexture(GL_TEXTURE_2D, m_scrTexture[m_currTex]);
 
-		screenShader.Bind();
-		screenShader.set_i("u_Texture", 0);
+		m_screenShader.Bind();
+		m_screenShader.set_i("u_Texture", 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		screenShader.Unbind();
-		m_VAO1.Unbind();
+		m_screenShader.Unbind();
+		m_VAO_scr.Unbind();
 		
 	}
 
@@ -1188,8 +1210,29 @@ namespace Phil {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
+	void Renderer::SwapFrameBuffer() {
+		this->DrawBatch();
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_scrTexture[!m_currTex], 0);
+
+		m_VAO_scr.Bind();
+		m_VBO_scr.BufferData(sizeof(float) * 4 * 6, &m_screen_vert[0], GL_STATIC_DRAW);
+
+		m_VBO_scr.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(0));
+		m_VBO_scr.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_scrTexture[m_currTex]);
+
+		m_screenShader.Bind();
+		m_screenShader.set_i("u_Texture", 0);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		m_screenShader.Unbind();
+		m_VAO_scr.Unbind();
+		m_currTex = !m_currTex;
+	}
+
 	unsigned int Renderer::GetScreenTexture() const {
-		return m_screenTexture;
+		return m_scrTexture[m_currTex];
 	}
 
 	void Renderer::SetDrawColor(const glm::vec4& color) {

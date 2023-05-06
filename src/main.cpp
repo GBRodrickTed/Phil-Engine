@@ -146,6 +146,8 @@ int main(int argc, char** argv) {
 
 	Phil::Rect rect4 = { {450, 450}, {100, 100} };
 
+	std::cout << !true << std::endl;
+
 	bool wireMode = false;
 
 	bool showGui = true;
@@ -251,9 +253,9 @@ int main(int argc, char** argv) {
 
 		renderer.AddLine(gMouse.x, gMouse.y, 0, 0);
 		renderer.AddRect(&texture2, rect4);
-		renderer.DrawRect(&texture2, rect1, shader1);
+		//renderer.DrawRect(&texture2, rect1, shader1);
 
-		//renderer.DrawScreen(shader1);
+		renderer.DrawScreen(shader1);
 
 		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
 
@@ -283,7 +285,7 @@ int main(int argc, char** argv) {
 
 		gameTime += frameTime;
 
-		FPS(60);
+		FPS(160);
 	}
 #ifdef __EMSCRIPTEN__
 	EMSCRIPTEN_MAINLOOP_END;

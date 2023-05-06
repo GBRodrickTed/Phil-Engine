@@ -73,6 +73,8 @@ namespace Phil {
 
 		void DrawBatch();
 
+		void SwapFrameBuffer();
+
 		VertexArray m_VAO;
 		VertexBuffer m_VBO;
 		IndexBuffer m_EBO;
@@ -96,8 +98,15 @@ namespace Phil {
 		Shader m_texBatchShader;
 		Shader m_lineBatchShader;
 
+		Phil::Shader m_screenShader;
+
+		Phil::VertexArray m_VAO_scr;
+		Phil::VertexBuffer m_VBO_scr;
+
 		int m_samplerArray[32];
 		int m_slottedTexs[32];
+
+		float m_screen_vert[24];
 
 		int m_texBufferEnd;
 
@@ -105,7 +114,9 @@ namespace Phil {
 		int m_maxVerts;
 
 		unsigned int m_framebuffer;
-		unsigned int m_screenTexture;
+		unsigned int m_scrTexture[2];
+
+		bool m_currTex;
 
 		glm::vec4 m_drawColor;
 		glm::vec4 m_clearColor;

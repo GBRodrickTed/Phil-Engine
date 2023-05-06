@@ -15,8 +15,8 @@ uniform float gTime;
 vec2 SineWave(vec2 p)
 {
     // convert Vertex position <-1,+1> to texture coordinate <0,1> and some shrinking so the effect dont overlap screen
-	float ty = 1;
-	float tx = 1;
+	float ty = 1 + gTime;
+	float tx = 1 + gTime;
     p.x = (0.55 * p.x) + 0.5;
     p.y = (-0.55 * p.y) + 0.5;
     // wave distortion
@@ -27,11 +27,11 @@ vec2 SineWave(vec2 p)
 
 void main() {
 
-	vec2 newUV = vec2(v_Pos.x, v_Pos.y);
+	//vec2 newUV = vec2(v_Pos.x, v_Pos.y);
 
-	vec2 betterUV = vec2((newUV.xy + 1) / 2);
+	//vec2 betterUV = vec2((newUV.xy + 1) / 2);
 
-	vec4 tex_scr = texture(SCREEN_TEXTURE, (newUV.xy + 1) / 2);
+	//vec4 tex_scr = texture(SCREEN_TEXTURE, (newUV.xy + 1) / 2);
 	//vec4 tex1 = texture(u_Texture, v_UV);
 
 	//float texMix = dot(tex1, tex_scr);
@@ -45,5 +45,5 @@ void main() {
 
 	//FragColor = resultColor;
 
-	FragColor = texture(u_Texture, betterUV);
+	FragColor = texture(SCREEN_TEXTURE, SineWave(v_UV));
 }
