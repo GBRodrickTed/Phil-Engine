@@ -2,26 +2,14 @@
 #include <GLFW/glfw3.h>
 #include <SDL2/SDL.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <stb_image.h>
-
 #include <iostream>
 #include <vector>
-#include <chrono>
 #include <thread>
 
-#include "Phil/Opengl Objects/Shader.h"
-#include "Phil/Opengl Objects/GLDebug.h"
-#include "Phil/Renderer.h"
-#include "Phil/Window.h"
+#include "Phil/Phil.h"
 
-#include "imGui/imgui.h"
-
-#include "imGui/backends/imgui_impl_sdl2.h"
-#include "imGui/backends/imgui_impl_opengl3.h"
+#include <thread>
+#include <random>
 
 #define SCR_W 1280
 #define SCR_H 720
@@ -30,36 +18,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-float frameTime = 0;
-float accumulator = 0;
-float dt = 1.0f / 120.0f;
 float gameTime = 0;
-float fixedTime = 0;
-unsigned int ticks = 0;
-
-std::chrono::system_clock::time_point programStart = std::chrono::system_clock::now();
-
-std::chrono::duration<double>getTime() {
-	return std::chrono::system_clock::now() - programStart;
-}
-
-void FPS(unsigned char fps) {
-	using namespace std::chrono;
-
-	static duration<double> currTime = duration<double>::zero();
-	static duration<double> eventTime = duration<double>::zero();
-
-	duration<double> invFps = duration<double>{ 1. / fps };
-
-	eventTime = getTime() - currTime;
-	// :)
-	if (eventTime < invFps) {
-		std::this_thread::sleep_for(invFps - eventTime);
-	}
-
-	frameTime = static_cast<float>(getTime().count() - currTime.count());
-	currTime = getTime();
-}
 
 int main(int argc, char** argv) {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -138,13 +97,25 @@ int main(int argc, char** argv) {
 	renderer.SetClearColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
 	renderer.SetDrawColor(glm::vec4(1.0f));
 
-	Phil::Rect rect1 = { {-50, -50}, {100, 100} };
+	Phil::Rect rect1 = { {-50, -50}, {SCR_W, SCR_H} };
 
 	Phil::Rect rect2 = { {150, 150}, {100, 100} };
 
 	Phil::Rect rect3 = { {250, 250}, {100, 100} };
 
 	Phil::Rect rect4 = { {450, 450}, {100, 100} };
+
+	vector<Phil::Rect> particles;
+
+	Phil::Rect rectp = { {0,0}, {0,0} };
+
+	int partiAmount = 1000;
+	for (int i = 0; i < partiAmount; i++) {
+		particles.push_back(rectp);
+	}
+	for (int i = 0; i < partiAmount; i++) {
+		particles[i].size = glm::vec2(rand_f(1, 5));
+	}
 
 	std::cout << !true << std::endl;
 
@@ -230,14 +201,17 @@ int main(int argc, char** argv) {
 		glm::vec2 scrSize = glm::vec2(SCR_W, SCR_H);
 		SDL_GetMouseState(&mouse.x, &mouse.y);
 
-		//float factor = 0.5f + ((0.5 * sin(gameTime * 2)) + 0.5) * 2;
-
+		
 		renderer.camera.SetSize(glm::vec2(SCR_W * static_cast<float>(pow(factor, 2)), SCR_H * static_cast<float>(pow(factor, 2))));
 		//renderer.camera.SetPos(rect1.pos + rect1.size / 2.0f - renderer.camera.GetSize()/2.0f);//glm::vec2(sin(gameTime * 2) * 50, cos(gameTime * 2) * 50) 
 		//renderer.camera.SetPos((glm::vec2)mouse - scrSize/2.0f - renderer.camera.GetSize() / 2.0f);
 		renderer.camera.SetPos(renderer.camera.GetSize() / -2.0f);
 		
 		gMouse = renderer.camera.TransMouse(mouse);
+
+		for (int i = 0; i < partiAmount; i++) {
+			particles[i].pos = gMouse - glm::vec2(75 * cos((2.31*(gameTime + (float)i / 10))) + particles[i].size.x/2, 75 * sin((2.17 * (gameTime + (float)i / 10))) + particles[i].size.y/2);
+		}
 
 		rect2.pos = gMouse - (rect2.size / 2.0f);
 		rect2.size = glm::vec2(50 + sin(gameTime*3) * 25, 50 - sin(gameTime * 3) * 25);
@@ -251,14 +225,19 @@ int main(int argc, char** argv) {
 
 		renderer.AddRect(&texture1, rect2);
 
+		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
 		renderer.AddLine(gMouse.x, gMouse.y, 0, 0);
 		renderer.AddRect(&texture2, rect4);
+
+		renderer.SetDrawColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		for (int i = 0; i < partiAmount; i++) {
+			renderer.AddRect(particles[i]);
+		}
+
 		//renderer.DrawRect(&texture2, rect1, shader1);
 
 		//renderer.DrawScreen(shader1);
-
-
-		renderer.SetDrawColor(glm::vec4(0.2f, 1.0f, 0.8f, 1.0f));
+		
 
 		renderer.Present();
 
@@ -284,9 +263,9 @@ int main(int argc, char** argv) {
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		SDL_GL_SwapWindow(window.GetWindow());
 
-		gameTime += frameTime;
+		gameTime += _frameTime;
 
-		FPS(160);
+		FPS(120);
 	}
 #ifdef __EMSCRIPTEN__
 	EMSCRIPTEN_MAINLOOP_END;

@@ -45,5 +45,5 @@ void main() {
 
 	//FragColor = resultColor;
 
-	FragColor = texture(SCREEN_TEXTURE, newUV);
+	FragColor = texture(SCREEN_TEXTURE, v_UV);
 }

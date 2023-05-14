@@ -52,6 +52,7 @@
     <ClInclude Include="src\Phil\Opengl Objects\VertexBuffer.h" />
     <ClInclude Include="src\Phil\Rect.h" />
     <ClInclude Include="src\Phil\Renderer.h" />
+    <ClInclude Include="src\Phil\Utility.h" />
     <ClInclude Include="src\Phil\Window.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />

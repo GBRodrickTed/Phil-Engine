@@ -1,1 +1,5 @@
-﻿  Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe
+﻿  main.cpp
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\main.cpp(209,19): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\main.cpp(213,19): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\main.cpp(215,19): warning C4305: '=': truncation from 'double' to 'float'
+  Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe
