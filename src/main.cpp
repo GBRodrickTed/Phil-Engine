@@ -7,12 +7,12 @@
 #include <thread>
 
 #include "Phil/Phil.h"
-#include "Space/Game.h"
-
 #include "Phil/Utility.h"
 
-#include <thread>
-#include <random>
+#include "Space/Game.h"
+#include "Space/GameState.h"
+
+
 
 static std::chrono::system_clock::time_point _programStart = std::chrono::system_clock::now();
 
@@ -50,10 +50,8 @@ int main(int argc, char** argv) {
 	
 	Game game;
 
-	while (game.running) {
-		game.Loop();
-		FPS(120);
-	}
+	game.Loop();
+
 #ifdef __EMSCRIPTEN__
 	EMSCRIPTEN_MAINLOOP_END;
 #endif

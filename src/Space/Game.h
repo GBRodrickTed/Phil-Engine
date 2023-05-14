@@ -13,6 +13,8 @@
 #include <thread>
 #include <random>
 
+class GameStateManager;
+
 class Game {
 public:
 	Game();
@@ -20,11 +22,14 @@ public:
 
 	void Loop();
 
+	Phil::Window* window;
+	Phil::Renderer* renderer;
+
+	GameStateManager* stateManager;
+
 	bool running;
 private:
-	Phil::Window* m_window;
 	SDL_GLContext m_gl_context;
-	Phil::Renderer* m_renderer;
-
+	
 	glm::ivec2 m_scrSize;
 };

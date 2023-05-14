@@ -1,4 +1,2 @@
-﻿  Renderer.cpp
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Phil\Renderer.cpp(28,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Phil\Renderer.cpp(28,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Game.cpp
   Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe

@@ -9,9 +9,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Opengl Objects/VertexArray.h"
-#include "Opengl Objects/VertexBuffer.h"
-#include "Opengl Objects/IndexBuffer.h"
 #include "Opengl Objects/Texture.h"
 #include "Opengl Objects/GLDebug.h"
 

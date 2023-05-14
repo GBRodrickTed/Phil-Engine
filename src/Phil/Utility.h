@@ -6,6 +6,8 @@
 #include <chrono>
 #include <thread>
 
+#include <random>
+
 int rand_i(int min, int max) {
 	std::random_device rd;
 	std::uniform_int_distribution<int> dist(min, max);
