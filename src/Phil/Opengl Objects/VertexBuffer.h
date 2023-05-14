@@ -10,8 +10,10 @@ namespace Phil
 	{
 	public:
 		VertexBuffer(GLenum type);
+		VertexBuffer();
 		~VertexBuffer();
 
+		void Init(GLenum type);
 		void BufferData(GLsizeiptr size, void* data, GLenum usage);
 		void BufferSubData(GLintptr offset, GLsizeiptr size, const void* data);
 		void Bind();
@@ -19,8 +21,10 @@ namespace Phil
 		void VertexAttribPointer(GLuint index, GLint size, GLenum type,
 			GLboolean normalized, GLsizei stride, const GLvoid* pointer);
 
-	private:
-		GLuint buffer_id;
+		
 		GLenum type;
+	private:
+		
+		GLuint buffer_id;
 	};
 }

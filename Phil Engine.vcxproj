@@ -30,6 +30,7 @@
     <ClCompile Include="src\Phil\Rect.cpp" />
     <ClCompile Include="src\Phil\Renderer.cpp" />
     <ClCompile Include="src\Phil\Window.cpp" />
+    <ClCompile Include="src\Space\Game.cpp" />
     <ClCompile Include="src\vendor\glad.c" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imGui\backends\imgui_impl_opengl3.cpp" />
@@ -50,10 +51,12 @@
     <ClInclude Include="src\Phil\Opengl Objects\Texture.h" />
     <ClInclude Include="src\Phil\Opengl Objects\VertexArray.h" />
     <ClInclude Include="src\Phil\Opengl Objects\VertexBuffer.h" />
+    <ClInclude Include="src\Phil\Phil.h" />
     <ClInclude Include="src\Phil\Rect.h" />
     <ClInclude Include="src\Phil\Renderer.h" />
     <ClInclude Include="src\Phil\Utility.h" />
     <ClInclude Include="src\Phil\Window.h" />
+    <ClInclude Include="src\Space\Game.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />
@@ -576,7 +579,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor;$(SolutionDir)Phil Engine\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -593,7 +596,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor;$(SolutionDir)Phil Engine\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

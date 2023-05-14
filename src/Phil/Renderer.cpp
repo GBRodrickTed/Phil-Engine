@@ -1,8 +1,24 @@
 #include "Renderer.h"
 
 namespace Phil {
-	Renderer::Renderer(Phil::Window* window) :m_VBO(GL_ARRAY_BUFFER), m_VBO_scr(GL_ARRAY_BUFFER), m_maxVerts(1000), m_vertCount(0), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
+	Renderer::Renderer() :m_maxVerts(1000), m_vertCount(0), m_drawColor(glm::vec4(1.0f)), m_clearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
 	{
+	}
+
+	void Renderer::Init(Phil::Window* window)
+	{
+		glGenVertexArrays(1, &(m_VAO));
+		glGenBuffers(1, &(m_VBO));
+		glGenBuffers(1, &(m_EBO));
+
+		glGenVertexArrays(1, &(m_VAO_scr));
+		glGenBuffers(1, &(m_VBO_scr));
+
+		m_maxVerts = 1000;
+		m_vertCount = 0;
+		m_drawColor = glm::vec4(1.0f);
+		m_clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
 		m_window = window;
 
 		int window_w, window_h;
@@ -276,7 +292,7 @@ namespace Phil {
 		m_screen_vert[22] = 0.0f;
 		m_screen_vert[23] = 0.0f;
 
-		
+
 
 		int index_offset = 0;
 		size_t index_size = 6 * m_maxVerts;
@@ -315,7 +331,6 @@ namespace Phil {
 		// attach it to currently bound framebuffer object
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_scrTexture[m_currTex], 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 	}
 
 	Renderer::~Renderer() {
@@ -885,14 +900,21 @@ namespace Phil {
 		m_vertBufferEnd += m_vertSize * 4;
 		m_vertCount += 4;
 
-		m_VAO.Bind();
-		m_VBO.BufferData(sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
-		m_EBO.BufferData(sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+		glBindVertexArray(m_VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
-		m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-		m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-		m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
-		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+		glEnableVertexAttribArray(3);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_scrTexture[m_currTex]);
@@ -905,7 +927,10 @@ namespace Phil {
 		m_vertCount = 0;
 		m_vertBufferEnd = 0;
 		m_texBufferEnd = 0;
-		m_VAO.Unbind();
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		for (int i = 0; i < m_maxTexSlots; i++)
 		{
@@ -993,14 +1018,21 @@ namespace Phil {
 		m_vertBufferEnd += m_vertSize * 4;
 		m_vertCount += 4;
 
-		m_VAO.Bind();
-		m_VBO.BufferData(sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
-		m_EBO.BufferData(sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+		glBindVertexArray(m_VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
-		m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-		m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-		m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
-		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+		glEnableVertexAttribArray(3);
 
 		//this->SwapFrameBuffer();
 
@@ -1015,12 +1047,13 @@ namespace Phil {
 		glDrawElements(GL_TRIANGLES, 6 * (m_vertCount / 4), GL_UNSIGNED_INT, 0);
 		shader.Unbind();
 
-		//this->SwapFrameBuffer();
-
 		m_vertCount = 0;
 		m_vertBufferEnd = 0;
 		m_texBufferEnd = 0;
-		m_VAO.Unbind();
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	void Renderer::DrawScreen(Phil::Shader& shader) {
@@ -1098,14 +1131,21 @@ namespace Phil {
 		m_vertBufferEnd += m_vertSize * 4;
 		m_vertCount += 4;
 
-		m_VAO.Bind();
-		m_VBO.BufferData(sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
-		m_EBO.BufferData(sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+		glBindVertexArray(m_VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
-		m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-		m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-		m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
-		m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+		glEnableVertexAttribArray(3);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_scrTexture[!m_currTex]);
@@ -1118,21 +1158,31 @@ namespace Phil {
 		m_vertCount = 0;
 		m_vertBufferEnd = 0;
 		m_texBufferEnd = 0;
-		m_VAO.Unbind();
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	void Renderer::DrawBatch()
 	{
 		switch (m_drawType) {
 		case QUAD:
-			m_VAO.Bind();
-			m_VBO.BufferData(sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
-			m_EBO.BufferData(sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+			glBindVertexArray(m_VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
-			m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-			m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-			m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
-			m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+
+			glVertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+			glEnableVertexAttribArray(3);
 
 			m_texBatchShader.Bind();
 			m_texBatchShader.set_iv("u_Textures", 32, m_samplerArray);
@@ -1154,7 +1204,10 @@ namespace Phil {
 			m_vertCount = 0;
 			m_vertBufferEnd = 0;
 			m_texBufferEnd = 0;
-			m_VAO.Unbind();
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 			for (int i = 0; i < m_maxTexSlots; i++)
 			{
@@ -1162,13 +1215,21 @@ namespace Phil {
 			}
 			break;
 		case LINE:
-			m_VAO.Bind();
-			m_VBO.BufferData(sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+			glBindVertexArray(m_VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
-			m_VBO.VertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-			m_VBO.VertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-			m_VBO.VertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
-			m_VBO.VertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+
+			glVertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+			glEnableVertexAttribArray(3);
 
 			m_lineBatchShader.Bind();
 			glDrawArrays(GL_LINES, 0, m_vertCount);
@@ -1176,7 +1237,10 @@ namespace Phil {
 
 			m_vertCount = 0;
 			m_vertBufferEnd = 0;
-			m_VAO.Unbind();
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			break;
 		}
 		
@@ -1186,12 +1250,15 @@ namespace Phil {
 		this->DrawBatch();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		
+		glBindVertexArray(m_VAO_scr);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_scr);
 
-		m_VAO_scr.Bind();
-		m_VBO_scr.BufferData(sizeof(float) * 4 * 6, &m_screen_vert[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * 6, &m_screen_vert[0], GL_STATIC_DRAW);
 
-		m_VBO_scr.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(0));
-		m_VBO_scr.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(0));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
+		glEnableVertexAttribArray(1);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_scrTexture[m_currTex]);
@@ -1200,7 +1267,9 @@ namespace Phil {
 		m_screenShader.set_i("u_Texture", 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		m_screenShader.Unbind();
-		m_VAO_scr.Unbind();
+		
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		
 	}
 
@@ -1215,11 +1284,15 @@ namespace Phil {
 		this->DrawBatch();
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_scrTexture[!m_currTex], 0);
 
-		m_VAO_scr.Bind();
-		m_VBO_scr.BufferData(sizeof(float) * 4 * 6, &m_screen_vert[0], GL_STATIC_DRAW);
+		glBindVertexArray(m_VAO_scr);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_scr);
 
-		m_VBO_scr.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(0));
-		m_VBO_scr.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * 6, &m_screen_vert[0], GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(0));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
+		glEnableVertexAttribArray(1);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_scrTexture[m_currTex]);
@@ -1228,7 +1301,10 @@ namespace Phil {
 		m_screenShader.set_i("u_Texture", 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		m_screenShader.Unbind();
-		m_VAO_scr.Unbind();
+		
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 		m_currTex = !m_currTex;
 	}
 

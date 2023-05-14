@@ -81,6 +81,9 @@
     <ClCompile Include="src\vendor\imGui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Space\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Phil\Opengl Objects\GLDebug.h">
@@ -993,6 +996,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Phil\Utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Phil\Phil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Space\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

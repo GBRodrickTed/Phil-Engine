@@ -26,8 +26,10 @@ namespace Phil {
 	
 	class Renderer {
 	public:
-		Renderer(Phil::Window* window);
+		Renderer();
 		~Renderer();
+
+		void Init(Phil::Window* window);
 
 		unsigned int GetScreenTexture() const;
 
@@ -75,9 +77,7 @@ namespace Phil {
 
 		void SwapFrameBuffer();
 
-		VertexArray m_VAO;
-		VertexBuffer m_VBO;
-		IndexBuffer m_EBO;
+		unsigned int m_VAO, m_VBO, m_EBO, m_VAO_scr, m_VBO_scr;
 
 		enum DrawType {
 			QUAD = 0,
@@ -99,9 +99,6 @@ namespace Phil {
 		Shader m_lineBatchShader;
 
 		Phil::Shader m_screenShader;
-
-		Phil::VertexArray m_VAO_scr;
-		Phil::VertexBuffer m_VBO_scr;
 
 		int m_samplerArray[32];
 		int m_slottedTexs[32];

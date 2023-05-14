@@ -38,9 +38,9 @@ Game::Game(){
 
 	SDL_GL_SetSwapInterval(1); // vsync
 
-	Phil::Window window;
+	m_window = new Phil::Window;
 	m_scrSize = glm::vec2(800, 600);
-	window.CreateWindow(SDL_CreateWindow(
+	m_window->CreateWindow(SDL_CreateWindow(
 		"Phil Engine",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
@@ -49,11 +49,11 @@ Game::Game(){
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
 	));
 
-	m_gl_context = SDL_GL_CreateContext(window.GetWindow());
-	SDL_GL_MakeCurrent(window.GetWindow(), m_gl_context);
+	m_gl_context = SDL_GL_CreateContext(m_window->GetWindow());
+	SDL_GL_MakeCurrent(m_window->GetWindow(), m_gl_context);
 	gladLoadGLLoader(SDL_GL_GetProcAddress);
 
-	glViewport(0, 0, window.GetW(), window.GetH());
+	glViewport(0, 0, m_window->GetW(), m_window->GetH());
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -62,12 +62,46 @@ Game::Game(){
 	
 	ImGui::StyleColorsDark();
 
-	ImGui_ImplSDL2_InitForOpenGL(window.GetWindow(), m_gl_context);
+	ImGui_ImplSDL2_InitForOpenGL(m_window->GetWindow(), m_gl_context);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	m_running = true;
+	m_renderer = new Phil::Renderer;
+	m_renderer->Init(m_window);
+
+	running = true;
+}
+
+Game::~Game() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
+	delete m_window;
+	delete m_renderer;
+
+	SDL_GL_DeleteContext(m_gl_context);
+	SDL_Quit();
+}
+
+void Game::Loop() {
+	SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_QUIT:
+			running = false;
+		}
+	}
+
+	Phil::Rect rect = { {100, 100}, {100, 100} };
+
+	m_renderer->Clear();
+
+	m_renderer->AddRect(rect);
+
+	m_renderer->Present();
+	SDL_GL_SwapWindow(m_window->GetWindow());
 }

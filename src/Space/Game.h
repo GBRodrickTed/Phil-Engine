@@ -16,12 +16,15 @@
 class Game {
 public:
 	Game();
+	~Game();
+
+	void Loop();
+
+	bool running;
 private:
 	Phil::Window* m_window;
 	SDL_GLContext m_gl_context;
 	Phil::Renderer* m_renderer;
 
 	glm::ivec2 m_scrSize;
-
-	bool m_running;
 };

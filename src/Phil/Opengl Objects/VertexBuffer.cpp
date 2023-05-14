@@ -2,7 +2,18 @@
 
 namespace Phil
 {
+	VertexBuffer::VertexBuffer()
+	{
+		this->buffer_id = 0;
+		this->type = 0;
+	}
+
 	VertexBuffer::VertexBuffer(GLenum type)
+	{
+		Init(type);
+	}
+
+	void VertexBuffer::Init(GLenum type)
 	{
 		this->buffer_id = 0;
 		this->type = type;
