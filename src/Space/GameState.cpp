@@ -130,16 +130,39 @@ void Screen_Play::HandleEvent() {
 
 }
 void Screen_Play::Update(float dt) {
-	player.vel *= pow(0.75f, dt * 1);
-	player.vel += player.dir * player.acc * dt;
+	game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 5.0f);
+	ivec2 mouse;
+	vec2 gMouse;
+	SDL_GetMouseState(&mouse.x, &mouse.y);
+
+	gMouse = game->renderer->camera.TransMouse(mouse);
+
+	vec2 force = vec2(100);
+
+	//player.vel *= pow(0.75f, dt * 1);
+
+	if (mouseDown[SDL_BUTTON_LEFT]) {
+		vec2 delta = player.pos - gMouse;
+
+		player.vel.x += dt * cosf((atan2f(delta.y, delta.x)) + M_PI) * (force.x / player.mass);
+		player.vel.y += dt * sinf((atan2f(delta.y, delta.x)) + M_PI) * (force.y / player.mass);
+	}
+
+	if (mouseDown[SDL_BUTTON_RIGHT]) {
+		player.pos = gMouse;
+	}
+
+	player.vel += player.dir * (force / player.mass) * dt;
 	player.pos += player.vel * dt;
 }
 void Screen_Play::Render() {
 	Phil::Rect rect = { {100, 100}, {100, 100} };
-
+	Phil::Texture tex("res/gfx/pixel_phil.png", GL_RGBA, GL_TEXTURE_2D, GL_LINEAR, GL_LINEAR, GL_CLAMP, GL_CLAMP);
 	game->renderer->Clear();
 
-	game->renderer->AddRect({ player.pos - (player.size)/2.0f, player.size });
+	game->renderer->AddRect(&tex, { player.pos - (player.size)/2.0f, player.size });
+
+	game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 1.0f);
 	game->renderer->AddLine(vec2(100), vec2(100.f + (player.vel)/10.f));
 
 	game->renderer->Present();

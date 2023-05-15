@@ -5,7 +5,8 @@ Player::Player() {
 	size = vec2(100);
 	dir = vec2(0);
 	vel = vec2(0);
-	acc = vec2(50);
+	acc = vec2(100);
+	mass = 1;
 
 	
 }

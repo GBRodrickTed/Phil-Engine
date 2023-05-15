@@ -14,7 +14,6 @@
 
 
 int main(int argc, char** argv) {
-	Phil::Texture tex("res/gfx/pixel_phil.png", GL_RGBA, GL_TEXTURE_2D, GL_NEAREST, GL_NEAREST, GL_CLAMP, GL_CLAMP);
 	Game game;
 
 	game.Loop();

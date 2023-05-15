@@ -13,7 +13,7 @@ public:
 
 	vec2 vel;
 	vec2 acc;
+	float mass;
 
-	//Phil::Texture tex;
 private:
 };
