@@ -1,6 +1,28 @@
 #include "Space/Game.h"
 #include "Space/GameState.h"
 
+std::chrono::duration<double> Time::getTime() {
+	return std::chrono::system_clock::now() - programStart;
+}
+
+void Time::FPS(unsigned char fps) {
+	using namespace std::chrono;
+
+	static duration<double> currTime = duration<double>::zero();
+	static duration<double> eventTime = duration<double>::zero();
+
+	duration<double> invFps = duration<double>{ 1. / fps };
+
+	eventTime = getTime() - currTime;
+	// :)
+	if (eventTime < invFps) {
+		std::this_thread::sleep_for(invFps - eventTime);
+	}
+
+	dt = static_cast<float>(getTime().count() - currTime.count());
+	currTime = getTime();
+}
+
 Game::Game(){
 
 	SDL_Init(SDL_INIT_VIDEO);
@@ -75,9 +97,6 @@ Game::Game(){
 
 	running = true;
 	stateManager = new GameStateManager;
-
-	stateManager->Init(this);
-	stateManager->PushState(GS_Screen_Play);
 }
 
 Game::~Game() {
@@ -93,11 +112,14 @@ Game::~Game() {
 }
 
 void Game::Loop() {
+	stateManager->Init(this);
+	stateManager->PushState(GS_Screen_Play);
 
 	while (running) {
 		stateManager->HandleEvent();
-		stateManager->Update(1);
+		stateManager->Update(time.dt);
 		stateManager->Render();
+		time.FPS(60);
 	}
 
 	stateManager->Destroy();

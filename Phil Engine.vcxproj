@@ -30,6 +30,7 @@
     <ClCompile Include="src\Space\Game.cpp" />
     <ClCompile Include="src\Space\GameState.cpp" />
     <ClCompile Include="src\Space\GameWorld.cpp" />
+    <ClCompile Include="src\Space\Player.cpp" />
     <ClCompile Include="src\vendor\glad.c" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imGui\backends\imgui_impl_opengl3.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="src\Space\Game.h" />
     <ClInclude Include="src\Space\GameState.h" />
     <ClInclude Include="src\Space\GameWorld.h" />
+    <ClInclude Include="src\Space\Player.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />

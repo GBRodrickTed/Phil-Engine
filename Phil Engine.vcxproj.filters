@@ -81,6 +81,9 @@
     <ClCompile Include="src\Space\GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Space\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Phil\Opengl Objects\GLDebug.h">
@@ -996,6 +999,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Space\GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Space\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

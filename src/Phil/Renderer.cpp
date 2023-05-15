@@ -771,6 +771,55 @@ namespace Phil {
 		m_drawType = LINE;
 	}
 
+	void Renderer::AddLine(const glm::vec2& p1, const glm::vec2& p2) {
+		if (m_vertCount >= m_maxVerts || m_drawType != LINE) {
+			this->DrawBatch();
+		}
+
+		int texIndex = -1;
+
+		glm::vec4 point[2];
+
+		point[0] = glm::vec4{ p1.x, p1.y, 0.0f, 1.0f };
+		point[1] = glm::vec4{ p2.x, p2.y, 0.0f, 1.0f };
+
+		for (int i = 0; i < 2; i++) {
+			point[i] = camera.GetMatrix() * point[i];
+		}
+
+		// Vertex 1
+		m_vertices[m_vertBufferEnd + 0] = point[0].x;
+		m_vertices[m_vertBufferEnd + 1] = point[0].y;
+		m_vertices[m_vertBufferEnd + 2] = point[0].z;
+
+		m_vertices[m_vertBufferEnd + 3] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 4] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 5] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 6] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 7] = 0.0f;
+		m_vertices[m_vertBufferEnd + 8] = 0.0f;
+		m_vertices[m_vertBufferEnd + 9] = float(texIndex);
+
+		// Vertex 2
+		m_vertices[m_vertBufferEnd + 10] = point[1].x;
+		m_vertices[m_vertBufferEnd + 11] = point[1].y;
+		m_vertices[m_vertBufferEnd + 12] = point[1].z;
+
+		m_vertices[m_vertBufferEnd + 13] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 14] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 15] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 16] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 17] = 1.0f;
+		m_vertices[m_vertBufferEnd + 18] = 0.0f;
+		m_vertices[m_vertBufferEnd + 19] = float(texIndex);
+
+		m_vertBufferEnd += m_vertSize * 2;
+		m_vertCount += 2;
+		m_drawType = LINE;
+	}
+
 	void Renderer::AddLineRect(const Phil::Rect& rect) {
 		if (m_vertCount >= m_maxVerts || m_drawType != LINE) {
 			this->DrawBatch();

@@ -12,8 +12,19 @@
 
 #include <thread>
 #include <random>
+#include <chrono>
 
 class GameStateManager;
+
+class Time {
+public:
+	std::chrono::system_clock::time_point programStart = std::chrono::system_clock::now();
+	float dt = 0;
+	float gameTime = 0;
+	std::chrono::duration<double>getTime();
+
+	void FPS(unsigned char fps);
+};
 
 class Game {
 public:
@@ -24,6 +35,8 @@ public:
 
 	Phil::Window* window;
 	Phil::Renderer* renderer;
+
+	Time time;
 
 	GameStateManager* stateManager;
 

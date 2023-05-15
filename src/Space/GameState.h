@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 
+#include "Player.h"
+
 class Game;
 
 class GameState {
@@ -46,5 +48,9 @@ public:
     void Render();
 private:
     Game* game;
+
+    Player player;
+
+    bool mouseDown[6];
 };
 static Screen_Play* GS_Screen_Play = new Screen_Play;

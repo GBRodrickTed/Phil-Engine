@@ -40,6 +40,8 @@ namespace Phil {
 
 		void AddLine(float x1, float x2, float y1, float y2);
 
+		void AddLine(const glm::vec2& p1, const glm::vec2& p2);
+
 		void AddLineRect(const Phil::Rect& rect);
 
 		void AddLineRect(const Phil::Rect& rect, float angle);

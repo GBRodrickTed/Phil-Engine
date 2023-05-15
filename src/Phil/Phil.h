@@ -2,11 +2,11 @@
 
 #include "Phil/Opengl Objects/Shader.h"
 #include "Phil/Opengl Objects/GLDebug.h"
+#include "Phil/Opengl Objects/Texture.h"
 #include "Phil/Renderer.h"
 
 #include "Phil/Window.h"
-
-
+#include "Phil/Rect.h"
 
 #include "imGui/imgui.h"
 
