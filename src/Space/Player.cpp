@@ -6,7 +6,8 @@ Player::Player() {
 	dir = vec2(0);
 	vel = vec2(0);
 	acc = vec2(100);
-	mass = 1;
+	force = 100000;
+	mass = 100;
 
 	
 }

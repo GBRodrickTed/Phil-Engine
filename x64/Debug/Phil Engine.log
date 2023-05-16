@@ -1,2 +1,28 @@
-﻿  Player.cpp
+﻿  GameState.cpp
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(146,62): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(147,62): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(163,20): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(167,32): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(171,32): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(175,32): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(179,32): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(182,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(184,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(210,22): warning C4305: '=': truncation from 'double' to 'float'
   Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe

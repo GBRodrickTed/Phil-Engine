@@ -14,6 +14,7 @@
 
 #include "Opengl Objects/Shader.h"
 #include "Rect.h"
+#include "Circle.h"
 #include "Window.h"
 #include "Camera.h"
 
@@ -45,6 +46,8 @@ namespace Phil {
 		void AddLineRect(const Phil::Rect& rect);
 
 		void AddLineRect(const Phil::Rect& rect, float angle);
+
+		void AddCircle(const Phil::Circle& circle);
 
 		void DrawRect(const Phil::Rect& rect, Phil::Shader& shader);
 
@@ -80,7 +83,8 @@ namespace Phil {
 
 		enum DrawType {
 			QUAD = 0,
-			LINE = 1
+			LINE = 1,
+			CIRCLE = 2
 		};
 
 		DrawType m_drawType;
@@ -96,6 +100,7 @@ namespace Phil {
 
 		Shader m_texBatchShader;
 		Shader m_lineBatchShader;
+		Shader m_circleBatchShader;
 
 		Phil::Shader m_screenShader;
 

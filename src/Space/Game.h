@@ -19,8 +19,11 @@ class GameStateManager;
 class Time {
 public:
 	std::chrono::system_clock::time_point programStart = std::chrono::system_clock::now();
-	float dt = 0;
+	float dt = 1.0f/30.0f;
+
+	float frameTime = 0;
 	float gameTime = 0;
+	float accumulator = 0;
 	std::chrono::duration<double>getTime();
 
 	void FPS(unsigned char fps);

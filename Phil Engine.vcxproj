@@ -30,6 +30,7 @@
     <ClCompile Include="src\Space\Game.cpp" />
     <ClCompile Include="src\Space\GameState.cpp" />
     <ClCompile Include="src\Space\GameWorld.cpp" />
+    <ClCompile Include="src\Space\Object.cpp" />
     <ClCompile Include="src\Space\Player.cpp" />
     <ClCompile Include="src\vendor\glad.c" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
@@ -45,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Phil\Camera.h" />
+    <ClInclude Include="src\Phil\Circle.h" />
     <ClInclude Include="src\Phil\Opengl Objects\GLDebug.h" />
     <ClInclude Include="src\Phil\Opengl Objects\Shader.h" />
     <ClInclude Include="src\Phil\Opengl Objects\Texture.h" />
@@ -56,6 +58,7 @@
     <ClInclude Include="src\Space\Game.h" />
     <ClInclude Include="src\Space\GameState.h" />
     <ClInclude Include="src\Space\GameWorld.h" />
+    <ClInclude Include="src\Space\Object.h" />
     <ClInclude Include="src\Space\Player.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />

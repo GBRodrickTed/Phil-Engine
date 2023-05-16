@@ -229,6 +229,51 @@ namespace Phil {
 			"}"
 		);
 
+		m_circleBatchShader.CreateShaderFromString(
+			"#version 330 core\n"
+			"layout(location = 0) in vec3 a_Pos;\n"
+			"layout(location = 1) in vec4 a_Color;\n"
+			"layout(location = 2) in vec2 a_UV;\n"
+			"\n"
+			"out vec3 v_Pos;\n"
+			"out vec4 v_Color;\n"
+			"out vec2 v_UV;\n"
+			"\n"
+			"void main()\n"
+			"{\n"
+			"\tgl_Position = vec4(a_Pos, 1.0f);\n"
+			"\n"
+			"\tv_Pos = gl_Position.xyz;\n"
+			"\tv_Color = a_Color;\n"
+			"\tv_UV = a_UV;\n"
+			"}"
+			,
+			"#version 330 core\n"
+			"\n"
+			"out vec4 FragColor;\n"
+			"\n"
+			"in vec3 v_Pos;\n"
+			"in vec4 v_Color;\n"
+			"in vec2 v_UV;\n"
+			"\n"
+			"vec4 circle(vec2 uv, vec3 pos, vec4 color) {\n"
+			"\tfloat d = length(pos.xy - uv) - 1;\n"
+			"\tfloat t = clamp(0.5, 0.0, 1.0);\n"
+			"\treturn vec4(color.rgb, color.a - t);\n"
+			"}\n"
+			"\n"
+			"void main() {\n"
+			"\n"
+			"\tif (length(v_UV - vec2(0.5)) < 0.5) {\n"
+			"\t\tFragColor = v_Color;\n"
+			"\t}\n"
+			"\telse {\n"
+			"\t\tFragColor = vec4(0., 0., 0., 0.);\n"
+			"\t}\n"
+			"\t//FragColor = circle(v_UV, v_Pos, v_Color);\n"
+			"}"
+		);
+
 		m_screenShader.CreateShaderFromString(
 			"#version 330 core\n"
 			"layout(location = 0) in vec3 a_Pos;\n"
@@ -820,6 +865,85 @@ namespace Phil {
 		m_drawType = LINE;
 	}
 
+	void Renderer::AddCircle(const Phil::Circle& circle) {
+		if (m_vertCount >= m_maxVerts || m_drawType != CIRCLE) {
+			this->DrawBatch();
+		}
+
+		int texIndex = -1;
+
+		glm::vec4 point[4];
+
+		point[0] = glm::vec4{ circle.pos.x - circle.r, circle.pos.y - circle.r, 0.0f, 1.0f };
+		point[1] = glm::vec4{ circle.pos.x + circle.r, circle.pos.y - circle.r, 0.0f, 1.0f };
+		point[2] = glm::vec4{ circle.pos.x - circle.r, circle.pos.y + circle.r, 0.0f, 1.0f };
+		point[3] = glm::vec4{ circle.pos.x + circle.r, circle.pos.y + circle.r, 0.0f, 1.0f };
+
+		for (int i = 0; i < 4; i++) {
+			point[i] = camera.GetMatrix() * point[i];
+		}
+
+		// Vertex 1
+		m_vertices[m_vertBufferEnd + 0] = point[0].x;
+		m_vertices[m_vertBufferEnd + 1] = point[0].y;
+		m_vertices[m_vertBufferEnd + 2] = point[0].z;
+
+		m_vertices[m_vertBufferEnd + 3] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 4] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 5] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 6] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 7] = 0.0f;
+		m_vertices[m_vertBufferEnd + 8] = 0.0f;
+		m_vertices[m_vertBufferEnd + 9] = float(texIndex);
+
+		// Vertex 2
+		m_vertices[m_vertBufferEnd + 10] = point[1].x;
+		m_vertices[m_vertBufferEnd + 11] = point[1].y;
+		m_vertices[m_vertBufferEnd + 12] = point[1].z;
+
+		m_vertices[m_vertBufferEnd + 13] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 14] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 15] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 16] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 17] = 1.0f;
+		m_vertices[m_vertBufferEnd + 18] = 0.0f;
+		m_vertices[m_vertBufferEnd + 19] = float(texIndex);
+
+		// Vertex 3
+		m_vertices[m_vertBufferEnd + 20] = point[2].x;
+		m_vertices[m_vertBufferEnd + 21] = point[2].y;
+		m_vertices[m_vertBufferEnd + 22] = point[2].z;
+
+		m_vertices[m_vertBufferEnd + 23] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 24] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 25] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 26] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 27] = 0.0f;
+		m_vertices[m_vertBufferEnd + 28] = 1.0f;
+		m_vertices[m_vertBufferEnd + 29] = float(texIndex);
+
+		// Vertex 4
+		m_vertices[m_vertBufferEnd + 30] = point[3].x;
+		m_vertices[m_vertBufferEnd + 31] = point[3].y;
+		m_vertices[m_vertBufferEnd + 32] = point[3].z;
+
+		m_vertices[m_vertBufferEnd + 33] = m_drawColor.r;
+		m_vertices[m_vertBufferEnd + 34] = m_drawColor.g;
+		m_vertices[m_vertBufferEnd + 35] = m_drawColor.b;
+		m_vertices[m_vertBufferEnd + 36] = m_drawColor.a;
+
+		m_vertices[m_vertBufferEnd + 37] = 1.0f;
+		m_vertices[m_vertBufferEnd + 38] = 1.0f;
+		m_vertices[m_vertBufferEnd + 39] = float(texIndex);
+
+		m_vertBufferEnd += m_vertSize * 4;
+		m_vertCount += 4;
+		m_drawType = CIRCLE;
+	}
+
 	void Renderer::AddLineRect(const Phil::Rect& rect) {
 		if (m_vertCount >= m_maxVerts || m_drawType != LINE) {
 			this->DrawBatch();
@@ -1283,6 +1407,34 @@ namespace Phil {
 			m_lineBatchShader.Bind();
 			glDrawArrays(GL_LINES, 0, m_vertCount);
 			m_texBatchShader.Unbind();
+
+			m_vertCount = 0;
+			m_vertBufferEnd = 0;
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			break;
+		case CIRCLE:
+			glBindVertexArray(m_VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4 * m_maxVerts, &m_vertices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6 * m_maxVerts, &m_indices[0], GL_STATIC_DRAW);
+
+			glVertexAttribPointer(0, m_posSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(1, m_colorSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(2, m_uvSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, UV));
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(3, m_texIDSize, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+			glEnableVertexAttribArray(3);
+
+			m_circleBatchShader.Bind();
+			glDrawElements(GL_TRIANGLES, 6 * (m_vertCount / 4), GL_UNSIGNED_INT, 0);
+			m_circleBatchShader.Unbind();
 
 			m_vertCount = 0;
 			m_vertBufferEnd = 0;

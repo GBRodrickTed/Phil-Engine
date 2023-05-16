@@ -19,7 +19,7 @@ void Time::FPS(unsigned char fps) {
 		std::this_thread::sleep_for(invFps - eventTime);
 	}
 
-	dt = static_cast<float>(getTime().count() - currTime.count());
+	frameTime = static_cast<float>(getTime().count() - currTime.count());
 	currTime = getTime();
 }
 
@@ -82,7 +82,9 @@ Game::Game(){
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
-	
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplSDL2_InitForOpenGL(window->GetWindow(), m_gl_context);
@@ -116,9 +118,25 @@ void Game::Loop() {
 	stateManager->PushState(GS_Screen_Play);
 
 	while (running) {
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplSDL2_NewFrame(window->GetWindow());
+		ImGui::NewFrame();
+
 		stateManager->HandleEvent();
-		stateManager->Update(time.dt);
+
+		time.accumulator += time.frameTime;
+
+		while (time.accumulator >= time.dt) {
+			stateManager->Update(&time);
+			time.accumulator -= time.dt;
+			time.gameTime += time.dt;
+		}
+		std::cout << "f" << std::endl;
 		stateManager->Render();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		SDL_GL_SwapWindow(window->GetWindow());
 		time.FPS(60);
 	}
 

@@ -3,8 +3,11 @@
 #include <vector>
 
 #include "Player.h"
+#include "Object.h"
+#include "Phil/Utility.h"
 
 class Game;
+class Time;
 
 class GameState {
 public:
@@ -15,7 +18,7 @@ public:
     virtual void Resume() {};
 
     virtual void HandleEvent() {};
-    virtual void Update(float dt) {};
+    virtual void Update(Time* time) {};
     virtual void Render() {};
 };
 
@@ -32,7 +35,7 @@ public:
     GameState* GetPrevState();
 
     void HandleEvent();
-    void Update(float dt);
+    void Update(Time* time);
     void Render();
 private:
     std::vector<GameState*> states;
@@ -42,14 +45,21 @@ private:
 class Screen_Play : public GameState {
 public:
     void Init(Game* game);
+    void Cleanup();
 
     void HandleEvent();
-    void Update(float dt);
+    void Update(Time* time);
     void Render();
 private:
     Game* game;
 
     Player player;
+
+    vector<Object*> objs;
+    int objNum;
+
+    float energy;
+    float momentum;
 
     bool mouseDown[6];
 };

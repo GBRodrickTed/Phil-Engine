@@ -13,6 +13,7 @@ public:
 
 	vec2 vel;
 	vec2 acc;
+	float force;
 	float mass;
 
 private:
