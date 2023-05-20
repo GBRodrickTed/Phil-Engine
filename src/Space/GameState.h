@@ -58,6 +58,8 @@ private:
     vector<Object*> objs;
     int objNum;
 
+    float force;
+    vec2 gravity = { 0.f, 300.f };
     float energy;
     float momentum;
 

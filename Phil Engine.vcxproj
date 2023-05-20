@@ -26,6 +26,7 @@
     <ClCompile Include="src\Phil\Opengl Objects\Texture.cpp" />
     <ClCompile Include="src\Phil\Rect.cpp" />
     <ClCompile Include="src\Phil\Renderer.cpp" />
+    <ClCompile Include="src\Phil\Utility.cpp" />
     <ClCompile Include="src\Phil\Window.cpp" />
     <ClCompile Include="src\Space\Game.cpp" />
     <ClCompile Include="src\Space\GameState.cpp" />

@@ -124,14 +124,13 @@ void Game::Loop() {
 
 		stateManager->HandleEvent();
 
-		time.accumulator += time.frameTime;
+		time.accumulator += time.frameTime * 1;
 
 		while (time.accumulator >= time.dt) {
 			stateManager->Update(&time);
 			time.accumulator -= time.dt;
 			time.gameTime += time.dt;
 		}
-		std::cout << "f" << std::endl;
 		stateManager->Render();
 
 		ImGui::Render();
