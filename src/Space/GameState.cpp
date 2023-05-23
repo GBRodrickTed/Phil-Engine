@@ -64,44 +64,63 @@ void GameStateManager::Render() {
 
 void Screen_Play::Init(Game* game) {
 	this->game = game;
-	objNum = 2;
+	objNum = 7;
 	force = 50000;
 
-	objs.push_back(new Object());
-	objs.push_back(new Object());
+	objs[0] = {
+		200.0f,
+		vec2(300.0f, 300.0f),
+		vec2(300.0f, 300.0f),
+		vec2(0.0f),
+		200.0f
+	};
+	
+	objs[1] = {
+		200.0f,
+		vec2(1100.0f, 1000.0f),
+		vec2(1100.0f, 1000.0f),
+		vec2(0.0f),
+		500.0f
+	};
 
-	objs[0]->pos = vec2(300, 100);
+	/*
+	objs[1] = {
+		100.0f,
+		vec2(1100.0f, 1000.0f),
+		vec2(1100.0f, 1000.0f),
+		vec2(0.0f),
+		100.0f 
+	};
+	objs[0].setVelocity(vec2(10, 9));*/
+
+	/*objs[0]->pos = vec2(300, 200);
 	objs[0]->r = 100;
 	objs[0]->mass = 100;
 	objs[0]->setVelocity(vec2(0, 20));
 
 	objs[1]->pos = vec2(300, 1000);
 	objs[1]->r = 100;
-	objs[1]->mass = 10000;
-	objs[1]->setVelocity(vec2(0, 0));
+	objs[1]->mass = 100;
+	objs[1]->setVelocity(vec2(0, 0));*/
 	
-	//for (int i = 0; i < objNum; i++) {
-	//	/*vec2 init_pos = vec2(
-	//		rand_f(0, game->window->GetW() * 5),
-	//		rand_f(0, game->window->GetH() * 5)
-	//	);
-	//	float rad = rand_f(50, 100);
-	//	objs.push_back(new Object(
-	//		rad,
-	//		init_pos,
-	//		init_pos,
-	//		vec2(0.f),
-	//		rad
-	//	));*/
-	//	objs.push_back(new Object());
-	//}
+	for (int i = 2; i < objNum; i++) {
+		vec2 init_pos = vec2(
+			rand_f(0, game->window->GetW() * 5),
+			rand_f(0, game->window->GetH() * 5)
+		);
+		float rad = rand_f(50, 100);
+		objs[i] = {
+			rad,
+			init_pos,
+			init_pos,
+			vec2(0.f),
+			rad
+		};
+		//objs.push_back(new Object());
+	}
 }
 
 void Screen_Play::Cleanup() {
-	for (int i = 0; i < objNum; i++) {
-		delete objs[i];
-	}
-	objs.clear();
 }
 
 void Screen_Play::HandleEvent() {
@@ -110,25 +129,25 @@ void Screen_Play::HandleEvent() {
 	player.dir = vec2(0);
 	const unsigned char* keystate = SDL_GetKeyboardState(NULL);
 
-	/*if (keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
+	if (keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
 	{
-		player.dir.y = -1;
+		objs[0].acc.y =+ -500;
 	}
 
 	if (keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_S])
 	{
-		player.dir.y = 1;
+		objs[0].acc.y =+ 500;
 	}
 
 	if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A])
 	{
-		player.dir.x = -1;
+		objs[0].acc.x =+ -500;
 	}
 
 	if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D])
 	{
-		player.dir.x = 1;
-	}*/
+		objs[0].acc.x =+ 500;
+	}
 	
 	while (SDL_PollEvent(&event)) {
 		ImGui_ImplSDL2_ProcessEvent(&event);
@@ -179,127 +198,102 @@ void Screen_Play::Update(Time* time) {
 
 
 	for (int i = 0; i < objNum; i++) {
-		//objs[i]->vel *= pow(0.95f, time->dt * 1);
-
+		objs[i].setVelocity(objs[i].getVelocity() * pow(0.65f, time->dt * 1));
+		
 		if (mouseDown[SDL_BUTTON_LEFT]) {
-			vec2 delta = objs[i]->pos - gMouse;
-			objs[i]->acc.x += cosf((atan2f(delta.y, delta.x)) + M_PI) * (force / objs[i]->mass);
-			objs[i]->acc.y += sinf((atan2f(delta.y, delta.x)) + M_PI) * (force / objs[i]->mass);
+			if (isForceMouse) {
+				vec2 delta = objs[i].pos - gMouse;
+				objs[i].acc.x += cosf((atan2f(delta.y, delta.x)) + M_PI) * (force / objs[i].mass);
+				objs[i].acc.y += sinf((atan2f(delta.y, delta.x)) + M_PI) * (force / objs[i].mass);
+			}
 		}
 
-		if (mouseDown[SDL_BUTTON_RIGHT]) {
-			objs[i]->pos = gMouse;
-			objs[i]->pos_prev = gMouse;
+		if (mouseDown[SDL_BUTTON_RIGHT]) 
+		{
+			if (pointCircle(gMouse, objs[i].pos, objs[i].r)) {
+				//objs[i].pos_prev = gMouse;
+				objs[i].pos = gMouse;
+			}
+			
+			//objs[i].pos_prev = gMouse;
 		}
 
 		if (mouseDown[SDL_BUTTON_MIDDLE]) {
-			objs[i]->pos_prev = objs[i]->pos;
+			objs[i].pos_prev = objs[i].pos;
 		}
-		//objs[i]->acc += gravity;
+		if (isGravity) {
+			objs[i].acc += gravity;
+		}
 
-		float elast = 1;
-		const float response_coef = 1.f;
+		float elast = 1.0;
+		const float response_coef = 1.0f;
 
 		for (int j = i; j < objNum; j++) {
-			if (objs[i] != objs[j]) {
-				float dist = distance(objs[i]->pos, objs[j]->pos);
-				float radSum = objs[i]->r + objs[j]->r;
+			if (i != j) {
+				float dist = distance(objs[i].pos, objs[j].pos);
+				float radSum = objs[i].r + objs[j].r;
 				if (dist > 0.0001f && dist < radSum) {
-					vec2 vrel = objs[i]->getVelocity() - objs[j]->getVelocity();
 
-					vec2 normal = normalize(objs[i]->pos - objs[j]->pos);
+					const float mass_ratio_1 = objs[i].mass / (objs[i].mass + objs[j].mass);
+					const float mass_ratio_2 = objs[j].mass / (objs[i].mass + objs[j].mass);
 
-					float impMag = -(1 + elast) * dot(vrel, normal) / ((1.0f / objs[i]->mass) + (1.0f / objs[j]->mass));
+					const float delta = 0.50f * (dist - radSum);
+					const vec2 col_vec = 1.0f * ((objs[i].pos - objs[j].pos) / dist);
+
+					objs[i].pos -= col_vec * (mass_ratio_2 * delta);
+					objs[j].pos += col_vec * (mass_ratio_1 * delta);
+
+					objs[i].pos_prev -= col_vec * (mass_ratio_2 * delta);
+					objs[j].pos_prev += col_vec * (mass_ratio_1 * delta);
+
+					vec2 vrel = objs[i].getVelocity() - objs[j].getVelocity();
+
+					vec2 normal = normalize(objs[i].pos - objs[j].pos);
+
+					float impMag = -(1 + elast) * dot(vrel, normal) / ((1.0f / objs[i].mass) + (1.0f / objs[j].mass));
 					
 					vec2 jn = normal * impMag;
 
-					cout << jn.x << endl;
-					cout << jn.y << endl;
+					objs[i].addImpulse(jn);
+					objs[j].addImpulse(-jn);
 
-					objs[i]->addImpulse(jn);
-					objs[j]->addImpulse(-jn);
+					dist = distance(objs[i].pos, objs[j].pos);
+					if ((dist < radSum)) {
+						cout << dist << endl;
+					}
 				}
 			}
 		}
-		cout << objs[i]->getVelocity().x << ", " << objs[i]->getVelocity().y << " " << i + 1 << endl;
 
-		/*for (int j = 0; j < objNum; j++) {
-			if (objs[i] != objs[j]) {
-				float dist = distance(objs[i]->pos, objs[j]->pos);
-				float radSum = objs[i]->r + objs[j]->r;
-				if (dist > 0.0001f && dist < radSum) {
-					const float mass_ratio_1 = objs[i]->mass / (objs[i]->mass + objs[j]->mass);
-					const float mass_ratio_2 = objs[j]->mass / (objs[i]->mass + objs[j]->mass);
-
-					const vec2 col_vec = ((objs[i]->pos - objs[j]->pos) / dist);
-					const float delta = 0.5f * response_coef * (dist - radSum);
-					objs[i]->pos -= col_vec * (mass_ratio_2 * delta);
-					objs[j]->pos += col_vec * (mass_ratio_1 * delta);
-				}
-			}
-		}*/
-
-		/*if ((objs[i]->pos.y + objs[i]->mass) >= game->window->GetH() * 5.0f) {
-			objs[i]->pos.y = game->window->GetH() * 5.0f - objs[i]->r - 1;
-			objs[i]->vel.y = -objs[i]->vel.y * pow(elast, 2);
+		vec2 vel = objs[i].getVelocity();
+		if ((objs[i].pos.y + objs[i].r) >= game->window->GetH() * 5.0f) {
+			objs[i].pos.y = game->window->GetH() * 5.0f - objs[i].r - 1;
+			//objs[i].vel.y = -objs[i].vel.y * pow(elast, 2);
+			vel.y = - vel.y * pow(response_coef, 2);
+			objs[i].setVelocity(vel);
 		}
-		if ((objs[i]->pos.y - objs[i]->mass) <= 0) {
-			objs[i]->pos.y = objs[i]->r + 1;
-			objs[i]->vel.y = -objs[i]->vel.y * pow(elast, 2);
+		if ((objs[i].pos.y - objs[i].r) <= 0) {
+			objs[i].pos.y = objs[i].r + 1;
+			//objs[i].vel.y = -objs[i].vel.y * pow(elast, 2);
+			vel.y = -vel.y * pow(response_coef, 2);
+			objs[i].setVelocity(vel);
 		}
-		if ((objs[i]->pos.x + objs[i]->mass) >= game->window->GetW() * 5.0f) {
-			objs[i]->pos.x = game->window->GetW() * 5.0f - objs[i]->r - 1;
-			objs[i]->vel.x = -objs[i]->vel.x * pow(elast, 2);
+		if ((objs[i].pos.x + objs[i].r) >= game->window->GetW() * 5.0f) {
+			objs[i].pos.x = game->window->GetW() * 5.0f - objs[i].r - 1;
+			vel.x = -vel.x * pow(response_coef, 2);
+			objs[i].setVelocity(vel);
 		}
-		if ((objs[i]->pos.x - objs[i]->mass) <= 0) {
-			objs[i]->pos.x = objs[i]->r + 1;
-			objs[i]->vel.x = -objs[i]->vel.x * pow(elast, 2);
-		}*/
-
-		objs[i]->update(time->dt);
-
+		if ((objs[i].pos.x - objs[i].r) <= 0) {
+			objs[i].pos.x = objs[i].r + 1;
+			vel.x = -vel.x * pow(response_coef, 2);
+			objs[i].setVelocity(vel);
+		}
 	}
 
-	//player.vel *= pow(0.95f, time->dt * 1);
-
-	/*if (mouseDown[SDL_BUTTON_LEFT]) {
-		vec2 delta = player.pos - gMouse;
-
-		player.vel.x += time->dt * cosf((atan2f(delta.y, delta.x)) + M_PI) * (player.force / player.mass);
-		player.vel.y += time->dt * sinf((atan2f(delta.y, delta.x)) + M_PI) * (player.force / player.mass);
+	for (int i = 0; i < objNum; i++) {
+		objs[i].update(time->dt);
 	}
-
-	if (mouseDown[SDL_BUTTON_RIGHT]) {
-		player.pos = gMouse;
-		player.vel = vec2(0);
-	}
-
-	if (mouseDown[SDL_BUTTON_MIDDLE]) {
-		player.vel = vec2(0);
-	}*/
-
-	//player.vel.y += 9800 * time->dt;
-	/*player.vel += player.dir * (player.force / player.mass) * time->dt;
-	player.pos += player.vel * time->dt;*/
-
-	/*float elast = 1.01;
-
-	if ((player.pos.y + player.mass) >= game->window->GetH() * 5.0f) {
-		player.pos.y = game->window->GetH() * 5.0f - player.mass-1;
-		player.vel.y = -player.vel.y * pow(elast, 2);
-	}
-	if ((player.pos.y - player.mass) <= 0) {
-		player.pos.y = player.mass + 1;
-		player.vel.y = -player.vel.y * pow(elast, 2);
-	}
-	if ((player.pos.x + player.mass) >= game->window->GetW() * 5.0f) {
-		player.pos.x = game->window->GetW() * 5.0f - player.mass - 1;
-		player.vel.x = -player.vel.x * pow(elast, 2);
-	}
-	if ((player.pos.x - player.mass) <= 0) {
-		player.pos.x = player.mass + 1;
-		player.vel.x = -player.vel.x * pow(elast, 2);
-	}*/
+	
 
 	//float totalVel = sqrt(pow(player.vel.x, 2) + pow(player.vel.y, 2));
 	//momentum = totalVel * player.mass;
@@ -312,7 +306,15 @@ void Screen_Play::Render() {
 
 	game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 5.0f);
 	for (int i = 0; i < objNum; i++) {
-		game->renderer->AddCircle({ objs[i]->pos, objs[i]->r });
+		if (i == 0) {
+			game->renderer->SetDrawColor({1, 0, 0, 0.5});
+		}
+		else {
+			vec2 vel = objs[i].getVelocity();
+			game->renderer->SetDrawColor({ 0, 0, 1, 1 });
+			game->renderer->m_drawColor = vec4(sin(vec3(0.f, 2.f, 4.f) + (objs[i].mass/100.0f) + (length(vel)/ 50.0f)), 1.0f);
+		}
+		game->renderer->AddCircle({ objs[i].pos, objs[i].r });
 	}
 
 	/*game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 5.0f);
@@ -332,11 +334,12 @@ void Screen_Play::Render() {
 		ImGui::Text("This is some useful text.");
 
 		for (int i = 0; i < objNum; i++) {
-			momentum += objs[i]->mass * objs[i]->getVelocity().y;
+			momentum += abs(objs[i].mass * length(objs[i].getVelocity()));
 		}
 
 		//ImGui::InputFloat("Mass", &player.mass);
-		//ImGui::InputFloat("force", &player.force);
+		ImGui::Checkbox("Gravity", &isGravity);
+		ImGui::Checkbox("ForceMouse", &isForceMouse);
 		ImGui::Text("Momentum: %0.6f", momentum);
 		momentum = 0;
 		//ImGui::Text("Kinetic Energy: %0.6f", energy);

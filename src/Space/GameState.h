@@ -55,11 +55,13 @@ private:
 
     Player player;
 
-    vector<Object*> objs;
+    Object objs[100];
     int objNum;
 
     float force;
-    vec2 gravity = { 0.f, 300.f };
+    bool isGravity = false;
+    bool isForceMouse = false;
+    vec2 gravity = { 0.f, 1000.f };
     float energy;
     float momentum;
 

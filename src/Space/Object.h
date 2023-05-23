@@ -45,3 +45,5 @@ public:
 
 private:
 };
+
+bool pointCircle(vec2 p, vec2 c, float r);

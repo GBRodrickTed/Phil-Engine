@@ -67,6 +67,9 @@ namespace Phil {
 
 		Camera camera;
 
+		glm::vec4 m_drawColor;
+		glm::vec4 m_clearColor;
+
 	private:
 		struct Vertex {
 			float Position[3];
@@ -118,9 +121,6 @@ namespace Phil {
 		unsigned int m_scrTexture[2];
 
 		bool m_currTex;
-
-		glm::vec4 m_drawColor;
-		glm::vec4 m_clearColor;
 
 		Phil::Window* m_window;
 

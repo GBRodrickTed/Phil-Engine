@@ -124,7 +124,7 @@ void Game::Loop() {
 
 		stateManager->HandleEvent();
 
-		time.accumulator += time.frameTime * 1;
+		time.accumulator += time.frameTime * 2;
 
 		while (time.accumulator >= time.dt) {
 			stateManager->Update(&time);
