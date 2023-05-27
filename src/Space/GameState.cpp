@@ -64,10 +64,11 @@ void GameStateManager::Render() {
 
 void Screen_Play::Init(Game* game) {
 	this->game = game;
-	objNum = 7;
-	force = 50000;
+	objNum = 500;
+	force = 15000;
+	scrScale = 100.0f;
 
-	objs[0] = {
+	/*objs[0] = {
 		200.0f,
 		vec2(300.0f, 300.0f),
 		vec2(300.0f, 300.0f),
@@ -76,39 +77,19 @@ void Screen_Play::Init(Game* game) {
 	};
 	
 	objs[1] = {
-		200.0f,
-		vec2(1100.0f, 1000.0f),
-		vec2(1100.0f, 1000.0f),
-		vec2(0.0f),
-		500.0f
-	};
-
-	/*
-	objs[1] = {
 		100.0f,
 		vec2(1100.0f, 1000.0f),
 		vec2(1100.0f, 1000.0f),
 		vec2(0.0f),
-		100.0f 
-	};
-	objs[0].setVelocity(vec2(10, 9));*/
-
-	/*objs[0]->pos = vec2(300, 200);
-	objs[0]->r = 100;
-	objs[0]->mass = 100;
-	objs[0]->setVelocity(vec2(0, 20));
-
-	objs[1]->pos = vec2(300, 1000);
-	objs[1]->r = 100;
-	objs[1]->mass = 100;
-	objs[1]->setVelocity(vec2(0, 0));*/
+		500.0f
+	};*/
 	
-	for (int i = 2; i < objNum; i++) {
+	for (int i = 0; i < objNum; i++) {
 		vec2 init_pos = vec2(
-			rand_f(0, game->window->GetW() * 5),
-			rand_f(0, game->window->GetH() * 5)
+			rand_f(-game->window->GetW() * scrScale/2, game->window->GetW() * scrScale/2),
+			rand_f(-game->window->GetH() * scrScale/2, game->window->GetH() * scrScale/2)
 		);
-		float rad = rand_f(50, 100);
+		float rad = rand_f(25, 150);
 		objs[i] = {
 			rad,
 			init_pos,
@@ -129,24 +110,33 @@ void Screen_Play::HandleEvent() {
 	player.dir = vec2(0);
 	const unsigned char* keystate = SDL_GetKeyboardState(NULL);
 
-	if (keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
-	{
-		objs[0].acc.y =+ -500;
-	}
+	if (chosen > -1) {
+		if (keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
+		{
+			objs[chosen].acc.y -= 1000;
+		}
 
-	if (keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_S])
-	{
-		objs[0].acc.y =+ 500;
-	}
+		if (keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_S])
+		{
+			objs[chosen].acc.y += 1000;
+		}
 
-	if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A])
-	{
-		objs[0].acc.x =+ -500;
-	}
+		if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A])
+		{
+			objs[chosen].acc.x -= 1000;
+		}
 
-	if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D])
+		if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D])
+		{
+			objs[chosen].acc.x += 1000;
+		}
+	}
+	
+	if (keystate[SDL_SCANCODE_LSHIFT])
 	{
-		objs[0].acc.x =+ 500;
+		chosen = -1;
+		isForceMouse = false;
+		
 	}
 	
 	while (SDL_PollEvent(&event)) {
@@ -183,22 +173,34 @@ void Screen_Play::HandleEvent() {
 				break;
 			}
 			break;
+		case SDL_MOUSEWHEEL:
+			if (event.wheel.y > 0) // scroll up
+			{
+				scrScale *= 0.85;
+			}
+			else if (event.wheel.y < 0) // scroll down
+			{
+				scrScale *= 1.15;
+			}
 		}
 	}
 
 }
 void Screen_Play::Update(Time* time) {
 	using namespace std;
-	game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 5.0f);
+	vec2 scr = vec2(game->window->GetW(), game->window->GetH());
+	game->renderer->camera.SetSize(scr * scrScale);
+	//vec2(game->window->GetW(), game->window->GetH()) * scrScale
 	ivec2 mouse;
 	vec2 gMouse;
 	SDL_GetMouseState(&mouse.x, &mouse.y);
 
 	gMouse = game->renderer->camera.TransMouse(mouse);
 
+	gameTime = time->gameTime;
 
 	for (int i = 0; i < objNum; i++) {
-		objs[i].setVelocity(objs[i].getVelocity() * pow(0.65f, time->dt * 1));
+		objs[i].setVelocity(objs[i].getVelocity() * pow(fric, time->dt * 1));
 		
 		if (mouseDown[SDL_BUTTON_LEFT]) {
 			if (isForceMouse) {
@@ -207,12 +209,17 @@ void Screen_Play::Update(Time* time) {
 				objs[i].acc.y += sinf((atan2f(delta.y, delta.x)) + M_PI) * (force / objs[i].mass);
 			}
 		}
+		vec2 delta = objs[i].pos - (vec2(0,0));
+		objs[i].acc.x += cosf((atan2f(delta.y, delta.x)) + M_PI) * (pointForce / objs[i].mass);
+		objs[i].acc.y += sinf((atan2f(delta.y, delta.x)) + M_PI) * (pointForce / objs[i].mass);
 
 		if (mouseDown[SDL_BUTTON_RIGHT]) 
 		{
+			//chosen = -1;
 			if (pointCircle(gMouse, objs[i].pos, objs[i].r)) {
 				//objs[i].pos_prev = gMouse;
-				objs[i].pos = gMouse;
+				//objs[i].pos = gMouse;
+				chosen = i;
 			}
 			
 			//objs[i].pos_prev = gMouse;
@@ -222,11 +229,8 @@ void Screen_Play::Update(Time* time) {
 			objs[i].pos_prev = objs[i].pos;
 		}
 		if (isGravity) {
-			objs[i].acc += gravity;
+			objs[i].acc += gravity * gStrength;
 		}
-
-		float elast = 1.0;
-		const float response_coef = 1.0f;
 
 		for (int j = i; j < objNum; j++) {
 			if (i != j) {
@@ -238,7 +242,7 @@ void Screen_Play::Update(Time* time) {
 					const float mass_ratio_2 = objs[j].mass / (objs[i].mass + objs[j].mass);
 
 					const float delta = 0.50f * (dist - radSum);
-					const vec2 col_vec = 1.0f * ((objs[i].pos - objs[j].pos) / dist);
+					const vec2 col_vec = coef * ((objs[i].pos - objs[j].pos) / dist);
 
 					objs[i].pos -= col_vec * (mass_ratio_2 * delta);
 					objs[j].pos += col_vec * (mass_ratio_1 * delta);
@@ -256,37 +260,33 @@ void Screen_Play::Update(Time* time) {
 
 					objs[i].addImpulse(jn);
 					objs[j].addImpulse(-jn);
-
-					dist = distance(objs[i].pos, objs[j].pos);
-					if ((dist < radSum)) {
-						cout << dist << endl;
-					}
 				}
 			}
 		}
 
 		vec2 vel = objs[i].getVelocity();
-		if ((objs[i].pos.y + objs[i].r) >= game->window->GetH() * 5.0f) {
-			objs[i].pos.y = game->window->GetH() * 5.0f - objs[i].r - 1;
-			//objs[i].vel.y = -objs[i].vel.y * pow(elast, 2);
-			vel.y = - vel.y * pow(response_coef, 2);
-			objs[i].setVelocity(vel);
-		}
-		if ((objs[i].pos.y - objs[i].r) <= 0) {
-			objs[i].pos.y = objs[i].r + 1;
-			//objs[i].vel.y = -objs[i].vel.y * pow(elast, 2);
-			vel.y = -vel.y * pow(response_coef, 2);
-			objs[i].setVelocity(vel);
-		}
-		if ((objs[i].pos.x + objs[i].r) >= game->window->GetW() * 5.0f) {
-			objs[i].pos.x = game->window->GetW() * 5.0f - objs[i].r - 1;
-			vel.x = -vel.x * pow(response_coef, 2);
-			objs[i].setVelocity(vel);
-		}
-		if ((objs[i].pos.x - objs[i].r) <= 0) {
-			objs[i].pos.x = objs[i].r + 1;
-			vel.x = -vel.x * pow(response_coef, 2);
-			objs[i].setVelocity(vel);
+		vec2 newScr = scr * scrScale / 2.0f;
+		if (boarder) {
+			if ((objs[i].pos.y + objs[i].r) >= newScr.y) {
+				objs[i].pos.y = newScr.y - objs[i].r - 1;
+				vel.y = -vel.y * pow(response_coef, 2);
+				objs[i].setVelocity(vel);
+			}
+			if ((objs[i].pos.y - objs[i].r) <= -newScr.y) {
+				objs[i].pos.y = -newScr.y + objs[i].r;
+				vel.y = -vel.y * pow(response_coef, 2);
+				objs[i].setVelocity(vel);
+			}
+			if ((objs[i].pos.x + objs[i].r) >= newScr.x) {
+				objs[i].pos.x = newScr.x - objs[i].r - 1;
+				vel.x = -vel.x * pow(response_coef, 2);
+				objs[i].setVelocity(vel);
+			}
+			if ((objs[i].pos.x - objs[i].r) <= -newScr.x) {
+				objs[i].pos.x = -newScr.x + objs[i].r;
+				vel.x = -vel.x * pow(response_coef, 2);
+				objs[i].setVelocity(vel);
+			}
 		}
 	}
 
@@ -294,34 +294,31 @@ void Screen_Play::Update(Time* time) {
 		objs[i].update(time->dt);
 	}
 	
-
-	//float totalVel = sqrt(pow(player.vel.x, 2) + pow(player.vel.y, 2));
-	//momentum = totalVel * player.mass;
-	//energy = 0.5 * player.mass * pow(totalVel, 2);//pow(momentum, 2)/(2*player.mass);
 }
 void Screen_Play::Render() {
 	Phil::Rect rect = { {100, 100}, {100, 100} };
 	Phil::Texture tex("res/gfx/pixel_phil.png", GL_RGBA, GL_TEXTURE_2D, GL_LINEAR, GL_LINEAR, GL_CLAMP, GL_CLAMP);
 	game->renderer->Clear();
+	vec2 scr = vec2(game->window->GetW(), game->window->GetH());
+	game->renderer->camera.SetSize(scr * scrScale);
+	game->renderer->camera.SetPos((-scr / 2.0f) * scrScale);
 
-	game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 5.0f);
+	ivec2 mouse;
+	vec2 gMouse;
+	SDL_GetMouseState(&mouse.x, &mouse.y);
+	gMouse = game->renderer->camera.TransMouse(mouse);
+
 	for (int i = 0; i < objNum; i++) {
-		if (i == 0) {
-			game->renderer->SetDrawColor({1, 0, 0, 0.5});
+		if (i == chosen) {
+			game->renderer->SetDrawColor({vec3(1.0f) + sin(gameTime)*0.5f, 1});
 		}
 		else {
 			vec2 vel = objs[i].getVelocity();
 			game->renderer->SetDrawColor({ 0, 0, 1, 1 });
-			game->renderer->m_drawColor = vec4(sin(vec3(0.f, 2.f, 4.f) + (objs[i].mass/100.0f) + (length(vel)/ 50.0f)), 1.0f);
+			game->renderer->m_drawColor = vec4(sin(vec3(0.f, 2.f, 4.f) + (objs[i].mass/100.0f)), 1.0f);
 		}
 		game->renderer->AddCircle({ objs[i].pos, objs[i].r });
 	}
-
-	/*game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 5.0f);
-	game->renderer->AddCircle({ player.pos, player.mass });
-
-	game->renderer->camera.SetSize(vec2(game->window->GetW(), game->window->GetH()) * 1.0f);
-	game->renderer->AddLine(vec2(100), vec2(100.f + (player.vel)/10.f));*/
 
 	game->renderer->Present();
 
@@ -329,19 +326,48 @@ void Screen_Play::Render() {
 		//float newMass = player.mass;
 		static int counter = 0;
 
-		ImGui::Begin("Hello, world!");
+		ImGui::Begin("Toolbox");
 
-		ImGui::Text("This is some useful text.");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
+			ImGui::GetIO().Framerate);
 
 		for (int i = 0; i < objNum; i++) {
 			momentum += abs(objs[i].mass * length(objs[i].getVelocity()));
 		}
-
-		//ImGui::InputFloat("Mass", &player.mass);
 		ImGui::Checkbox("Gravity", &isGravity);
-		ImGui::Checkbox("ForceMouse", &isForceMouse);
+		if (isGravity) {
+			ImGui::SliderFloat("Strength", &this->gStrength, -3.0f, 3.0f);
+		}
+		ImGui::Checkbox("Force Mouse", &isForceMouse);
 		ImGui::Text("Momentum: %0.6f", momentum);
 		momentum = 0;
+		ImGui::Checkbox("Boarder", &boarder);
+		ImGui::InputFloat("Point Force", &pointForce);
+		ImGui::InputFloat("Elasticty", &elast);
+		ImGui::InputFloat("Wall Elast", &response_coef);
+		ImGui::InputFloat("Air Friction", &fric);
+		ImGui::InputFloat("Coef", &coef);
+		ImGui::Text("Zoom: %0.6f", scrScale);
+		ImGui::Text("World Mouse: [%0.2f, %0.2f]", gMouse.x, gMouse.y);
+		if (chosen > -1) {
+			ImGui::Begin("Object");
+				vec2 vel = objs[chosen].getVelocity();
+				ImGui::Text("Pos: [%0.2f, %0.2f]", objs[chosen].pos.x, objs[chosen].pos.y);
+				ImGui::Text("Velocity: [%0.2f, %0.2f] (%0.2f)", vel.x, vel.y, length(vel));
+				ImGui::Text("Mass: %0.2f", objs[chosen].mass);
+
+				ImGui::InputFloat("Mass", &objs[chosen].mass);
+				if (objs[chosen].mass < 0.01f) {
+					objs[chosen].mass = 0.01f;
+				}
+				ImGui::Text("Radius: %0.2f", objs[chosen].r);
+				ImGui::InputFloat("R", &objs[chosen].r);
+				if (objs[chosen].r < 0.01f) {
+					objs[chosen].r = 0.01f;
+				}
+			ImGui::End();
+		}
+		
 		//ImGui::Text("Kinetic Energy: %0.6f", energy);
 		//ImGui::Text("Pos: %0.6f, %0.6f", player.pos.x, player.pos.y);
 		//ImGui::Text("Norm Vel: (%0.6f, %0.6f)", glm::normalize(player.vel).x, glm::normalize(player.vel).y);

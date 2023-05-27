@@ -62,7 +62,7 @@ Game::Game(){
 	SDL_GL_SetSwapInterval(1); // vsync
 
 	window = new Phil::Window;
-	m_scrSize = glm::vec2(800, 600);
+	m_scrSize = glm::vec2(1280, 720);
 	window->CreateWindow(SDL_CreateWindow(
 		"Phil Engine",
 		SDL_WINDOWPOS_CENTERED,
@@ -124,7 +124,7 @@ void Game::Loop() {
 
 		stateManager->HandleEvent();
 
-		time.accumulator += time.frameTime * 2;
+		time.accumulator += time.frameTime * 1;
 
 		while (time.accumulator >= time.dt) {
 			stateManager->Update(&time);

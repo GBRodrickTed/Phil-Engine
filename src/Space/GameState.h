@@ -55,12 +55,23 @@ private:
 
     Player player;
 
-    Object objs[100];
+    Object objs[1000];
     int objNum;
 
+    float elast = 0.75;
+    float response_coef = 0.75;
+    float fric = 1;
+    float coef = 2.0f;
+
     float force;
+    float pointForce = 50000;
+    bool boarder = true;
+    float gameTime;
+    float scrScale;
+    int chosen = -1;
     bool isGravity = false;
     bool isForceMouse = false;
+    float gStrength = 1;
     vec2 gravity = { 0.f, 1000.f };
     float energy;
     float momentum;

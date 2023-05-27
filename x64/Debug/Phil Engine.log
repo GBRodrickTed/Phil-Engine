@@ -1,24 +1,26 @@
 ﻿  GameState.cpp
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(108,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(109,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(206,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(207,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(179,21): warning C4305: '*=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(183,21): warning C4305: '*=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(208,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(209,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(213,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(214,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(272,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(278,19): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(277,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(283,19): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(282,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(288,19): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(287,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
