@@ -1,0 +1,59 @@
+﻿  main.cpp
+  Camera.cpp
+  GLDebug.cpp
+  Shader.cpp
+  Texture.cpp
+  Rect.cpp
+  Renderer.cpp
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Phil\Renderer.cpp(28,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Phil\Renderer.cpp(28,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Utility.cpp
+  Window.cpp
+  Game.cpp
+  GameState.cpp
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(179,21): warning C4305: '*=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(183,21): warning C4305: '*=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(208,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(209,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(213,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(214,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(272,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(277,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(282,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(287,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  GameWorld.cpp
+  Object.cpp
+  Player.cpp
+  glm.cpp
+  imgui_impl_opengl3.cpp
+  imgui_impl_sdl2.cpp
+  imgui_impl_sdlrenderer.cpp
+  imgui.cpp
+  imgui_demo.cpp
+  Compiling...
+  imgui_draw.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  stb_init.cpp
+  glad.c
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2065 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Release\Phil Engine.exe

@@ -68,21 +68,6 @@ void Screen_Play::Init(Game* game) {
 	force = 15000;
 	scrScale = 100.0f;
 
-	/*objs[0] = {
-		200.0f,
-		vec2(300.0f, 300.0f),
-		vec2(300.0f, 300.0f),
-		vec2(0.0f),
-		200.0f
-	};
-	
-	objs[1] = {
-		100.0f,
-		vec2(1100.0f, 1000.0f),
-		vec2(1100.0f, 1000.0f),
-		vec2(0.0f),
-		500.0f
-	};*/
 	
 	for (int i = 0; i < objNum; i++) {
 		vec2 init_pos = vec2(
@@ -263,7 +248,7 @@ void Screen_Play::Update(Time* time) {
 				}
 			}
 		}
-
+		//
 		vec2 vel = objs[i].getVelocity();
 		vec2 newScr = scr * scrScale / 2.0f;
 		if (boarder) {
@@ -339,6 +324,9 @@ void Screen_Play::Render() {
 			ImGui::SliderFloat("Strength", &this->gStrength, -3.0f, 3.0f);
 		}
 		ImGui::Checkbox("Force Mouse", &isForceMouse);
+		if (isForceMouse) {
+			ImGui::InputFloat("Force Strength", &force);
+		}
 		ImGui::Text("Momentum: %0.6f", momentum);
 		momentum = 0;
 		ImGui::Checkbox("Boarder", &boarder);
@@ -346,7 +334,7 @@ void Screen_Play::Render() {
 		ImGui::InputFloat("Elasticty", &elast);
 		ImGui::InputFloat("Wall Elast", &response_coef);
 		ImGui::InputFloat("Air Friction", &fric);
-		ImGui::InputFloat("Coef", &coef);
+		ImGui::InputFloat("Response Coef", &coef);
 		ImGui::Text("Zoom: %0.6f", scrScale);
 		ImGui::Text("World Mouse: [%0.2f, %0.2f]", gMouse.x, gMouse.y);
 		if (chosen > -1) {
