@@ -16,7 +16,7 @@ namespace Phil
 		unsigned int texwrap_s, unsigned int texwrap_t)
 	{
 		stbi_set_flip_vertically_on_load(true);
-
+		
 		m_canDelete = true;
 		m_texture = new unsigned int;
 		m_type = type;

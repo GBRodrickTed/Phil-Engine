@@ -1,1 +1,28 @@
-﻿  Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe
+﻿  GameState.cpp
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(164,21): warning C4305: '*=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(168,21): warning C4305: '*=': truncation from 'double' to 'float'
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(193,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(194,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(198,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(199,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(257,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(262,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(267,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(272,20): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe

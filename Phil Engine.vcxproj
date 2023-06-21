@@ -22,14 +22,17 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Phil\Camera.cpp" />
     <ClCompile Include="src\Phil\Opengl Objects\GLDebug.cpp" />
-    <ClCompile Include="src\Phil\Opengl Objects\IndexBuffer.cpp" />
     <ClCompile Include="src\Phil\Opengl Objects\Shader.cpp" />
     <ClCompile Include="src\Phil\Opengl Objects\Texture.cpp" />
-    <ClCompile Include="src\Phil\Opengl Objects\VertexArray.cpp" />
-    <ClCompile Include="src\Phil\Opengl Objects\VertexBuffer.cpp" />
     <ClCompile Include="src\Phil\Rect.cpp" />
     <ClCompile Include="src\Phil\Renderer.cpp" />
+    <ClCompile Include="src\Phil\Utility.cpp" />
     <ClCompile Include="src\Phil\Window.cpp" />
+    <ClCompile Include="src\Space\Game.cpp" />
+    <ClCompile Include="src\Space\GameState.cpp" />
+    <ClCompile Include="src\Space\GameWorld.cpp" />
+    <ClCompile Include="src\Space\Object.cpp" />
+    <ClCompile Include="src\Space\Player.cpp" />
     <ClCompile Include="src\vendor\glad.c" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imGui\backends\imgui_impl_opengl3.cpp" />
@@ -44,15 +47,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Phil\Camera.h" />
+    <ClInclude Include="src\Phil\Circle.h" />
     <ClInclude Include="src\Phil\Opengl Objects\GLDebug.h" />
-    <ClInclude Include="src\Phil\Opengl Objects\IndexBuffer.h" />
     <ClInclude Include="src\Phil\Opengl Objects\Shader.h" />
     <ClInclude Include="src\Phil\Opengl Objects\Texture.h" />
-    <ClInclude Include="src\Phil\Opengl Objects\VertexArray.h" />
-    <ClInclude Include="src\Phil\Opengl Objects\VertexBuffer.h" />
+    <ClInclude Include="src\Phil\Phil.h" />
     <ClInclude Include="src\Phil\Rect.h" />
     <ClInclude Include="src\Phil\Renderer.h" />
+    <ClInclude Include="src\Phil\Utility.h" />
     <ClInclude Include="src\Phil\Window.h" />
+    <ClInclude Include="src\Space\Game.h" />
+    <ClInclude Include="src\Space\GameState.h" />
+    <ClInclude Include="src\Space\GameWorld.h" />
+    <ClInclude Include="src\Space\Object.h" />
+    <ClInclude Include="src\Space\Player.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />
@@ -575,7 +583,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor;$(SolutionDir)Phil Engine\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -592,7 +600,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Phil Engine\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Phil Engine\src\vendor;$(SolutionDir)Phil Engine\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

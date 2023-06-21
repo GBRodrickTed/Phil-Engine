@@ -9,14 +9,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Opengl Objects/VertexArray.h"
-#include "Opengl Objects/VertexBuffer.h"
-#include "Opengl Objects/IndexBuffer.h"
 #include "Opengl Objects/Texture.h"
 #include "Opengl Objects/GLDebug.h"
 
 #include "Opengl Objects/Shader.h"
 #include "Rect.h"
+#include "Circle.h"
 #include "Window.h"
 #include "Camera.h"
 
@@ -26,8 +24,10 @@ namespace Phil {
 	
 	class Renderer {
 	public:
-		Renderer(Phil::Window* window);
+		Renderer();
 		~Renderer();
+
+		void Init(Phil::Window* window);
 
 		unsigned int GetScreenTexture() const;
 
@@ -41,9 +41,13 @@ namespace Phil {
 
 		void AddLine(float x1, float x2, float y1, float y2);
 
+		void AddLine(const glm::vec2& p1, const glm::vec2& p2);
+
 		void AddLineRect(const Phil::Rect& rect);
 
 		void AddLineRect(const Phil::Rect& rect, float angle);
+
+		void AddCircle(const Phil::Circle& circle);
 
 		void DrawRect(const Phil::Rect& rect, Phil::Shader& shader);
 
@@ -63,6 +67,9 @@ namespace Phil {
 
 		Camera camera;
 
+		glm::vec4 m_drawColor;
+		glm::vec4 m_clearColor;
+
 	private:
 		struct Vertex {
 			float Position[3];
@@ -75,13 +82,12 @@ namespace Phil {
 
 		void SwapFrameBuffer();
 
-		VertexArray m_VAO;
-		VertexBuffer m_VBO;
-		IndexBuffer m_EBO;
+		unsigned int m_VAO, m_VBO, m_EBO, m_VAO_scr, m_VBO_scr;
 
 		enum DrawType {
 			QUAD = 0,
-			LINE = 1
+			LINE = 1,
+			CIRCLE = 2
 		};
 
 		DrawType m_drawType;
@@ -97,11 +103,9 @@ namespace Phil {
 
 		Shader m_texBatchShader;
 		Shader m_lineBatchShader;
+		Shader m_circleBatchShader;
 
 		Phil::Shader m_screenShader;
-
-		Phil::VertexArray m_VAO_scr;
-		Phil::VertexBuffer m_VBO_scr;
 
 		int m_samplerArray[32];
 		int m_slottedTexs[32];
@@ -117,9 +121,6 @@ namespace Phil {
 		unsigned int m_scrTexture[2];
 
 		bool m_currTex;
-
-		glm::vec4 m_drawColor;
-		glm::vec4 m_clearColor;
 
 		Phil::Window* m_window;
 
