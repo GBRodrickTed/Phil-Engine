@@ -1,5 +1,4 @@
-﻿  Game.cpp
-  GameState.cpp
+﻿  GameState.cpp
 C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(164,21): warning C4305: '*=': truncation from 'double' to 'float'
 C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(168,21): warning C4305: '*=': truncation from 'double' to 'float'
 C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\Space\GameState.cpp(193,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
@@ -26,6 +25,4 @@ C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\Phil Engine\src\
           [
               T=float
           ]
-  main.cpp
-  Generating Code...
   Phil Engine.vcxproj -> C:\Users\theca\Documents\Coding Stuff\CVS Deluxe\VS\Phil Engine\x64\Debug\Phil Engine.exe
